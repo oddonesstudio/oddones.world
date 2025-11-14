@@ -1,27 +1,45 @@
 {
-  "name": "odd-ones",
+  "name": "oddones-world",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "bunx next dev",
+    "build": "bunx next build",
+    "start": "bunx next start",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.5"
+    "@portabletext/react": "^4.0.3",
+    "@sanity/client": "^7.12.0",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "4.10.2",
+    "groqd": "^1.7.1",
+    "motion": "^12.23.24",
+    "next": "15.5.5",
+    "next-sanity": "11.4.2",
+    "radix-ui": "^1.4.3",
+    "react": "18.3.1",
+    "react-colorful": "^5.6.1",
+    "react-dom": "18.3.1",
+    "sanity": "4.10.2",
+    "tailwind-variants": "^3.1.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@biomejs/biome": "^2.3.4",
+    "@chromatic-com/storybook": "^4.1.2",
+    "@storybook/addon-a11y": "^10.0.4",
+    "@storybook/addon-docs": "^10.0.4",
+    "@storybook/addon-vitest": "^10.0.4",
+    "@storybook/nextjs-vite": "^10.0.4",
+    "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.5",
-    "@eslint/eslintrc": "^3"
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "storybook": "^10.0.4",
+    "tailwindcss": "^4.1.16",
+    "typescript": "^5.9.3"
   }
 }
