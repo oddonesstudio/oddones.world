@@ -5,6 +5,14 @@
   --background: hsl(200, 100%, 50%);
   --foreground: #fff;
   --page-background: #fefffa;
+
+  --page-padding-sm: 1rem;
+  --page-padding-md: 1.5rem;
+  --page-padding-lg: 2rem;
+
+  --page-max-w: 80ch;
+
+  --header-height: 148px;
 }
 
 @theme inline {

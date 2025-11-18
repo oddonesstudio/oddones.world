@@ -25,6 +25,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const query = `
     *[_type == "article" && slug.current == $slug][0]{
       title,
+      body,
       coverImage {
         asset->{
           url,
@@ -75,6 +76,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         bgColor={bgColor[data.backgroundColor as BackgroundColor]}
         featuredImage={featuredImage}
         title={data.title}
+        body={data.body}
         excerpt={data.excerpt}
         pixel={data.pixelAsset}
       />
