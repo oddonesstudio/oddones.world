@@ -19,8 +19,8 @@ export default function AboutClient({
 }: {
   title?: string;
   pixelPuzzle?: {
-    title: string;
-    svg: string;
+    title?: string;
+    svg?: string;
   };
   intro?: string;
 }) {
@@ -49,8 +49,8 @@ export default function AboutClient({
     setError("");
   }
 
-  const maskUrl = pixelPuzzle && getMaskUrl(pixelPuzzle.svg);
-  const solution = pixelPuzzle ? generateSolutionFromSvg(pixelPuzzle.svg) : [];
+  const maskUrl = pixelPuzzle?.svg && getMaskUrl(pixelPuzzle.svg);
+  const solution = pixelPuzzle?.svg ? generateSolutionFromSvg(pixelPuzzle.svg) : [];
 
   return (
     <PageWrapper>
@@ -77,7 +77,7 @@ export default function AboutClient({
             }}
           >
             <div className="absolute inset-0 opacity-0 group-hover:opacity-80">
-              <PuzzleDialog solution={solution} onSolved={handlePuzzleSolved} />
+              <PuzzleDialog svg={""} solution={solution} onSolved={handlePuzzleSolved} />
             </div>
           </div>
 

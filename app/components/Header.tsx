@@ -8,14 +8,14 @@ import { tv } from "tailwind-variants";
 
 import type { SiteSettings } from "@/studio/sanity.types";
 
-import { Icon } from "./Icon/Icon";
 import { Logo } from "./Logo";
+import { PixelReveal } from "./PixelReveal/PixelReveal";
 
 const styles = tv({
   slots: {
-    base: "sticky top-0 w-full flex justify-between px-20 py-20 pb-10 items-end z-30",
-    logoTab: "bg-black w-[150px] h-[250px] absolute top-0 left-20 cursor-pointer",
-    logoFrame: "bg-page-background absolute bottom-8 left-1/2 -translate-x-1/2 p-1 pb-2",
+    base: "sticky top-0 w-full flex justify-between p-8 md:px-20 md:pt-12 md:pb-20 items-end z-30",
+    logoTab: "hidden h-full md:flex items-end bg-black p-8 absolute top-0 left-20 cursor-pointer",
+    logoFrame: "h-fit bg-page-background p-1 pb-2",
     nav: "flex gap-10 text-xl",
     navItem: "flex gap-2 items-center",
     navIcon: "",
@@ -108,14 +108,14 @@ export const Header = (props: HeaderProps) => {
         <ul className={nav({ invert })}>
           {props.nav?.map((item: any) => (
             <li key={item._key} className={navItem({ disabled: !item.slug })}>
-              <Icon svg={item.pixelIcon?.svg} />
+              <PixelReveal svg={item.pixelIcon?.svg} />
               <Link
                 href={`/${item.slug ?? ""}`}
                 className={`${pathname === `/${item.slug}` && "underline"}`}
               >
                 {item.label}
               </Link>
-              <Icon svg={item.pixelIcon?.svg} />
+              <PixelReveal svg={item.pixelIcon?.svg} />
             </li>
           ))}
         </ul>

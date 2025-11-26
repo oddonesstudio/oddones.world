@@ -1,7 +1,8 @@
 import type { ButtonHTMLAttributes } from "react";
 import { tv } from "tailwind-variants";
 
-import { Icon, type IconProps } from "../Icon/Icon";
+import { Icon } from "../Icon/Icon";
+import type { PixelProps } from "../PixelReveal/PixelReveal";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
@@ -9,8 +10,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "sm" | "md" | "lg";
   label: string;
   onClick?: () => void;
-  iconLeft?: IconProps;
-  iconRight?: IconProps;
+  iconLeft?: PixelProps;
+  iconRight?: PixelProps;
 }
 
 const button = tv({

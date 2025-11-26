@@ -4,12 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 
 import { set, unset } from "sanity";
 
-type PixelEditorProps = {
+type PixelCanvasProps = {
   value?: string;
   onChange: (patch: ReturnType<typeof set> | ReturnType<typeof unset>) => void;
 };
 
-export const PixelEditor: React.FC<PixelEditorProps> = ({ value, onChange }) => {
+export const PixelCanvas: React.FC<PixelCanvasProps> = ({ value, onChange }) => {
   const size = 16; // TODO: allow custom size
   const [pixels, setPixels] = useState<boolean[]>(Array(size * size).fill(false));
 

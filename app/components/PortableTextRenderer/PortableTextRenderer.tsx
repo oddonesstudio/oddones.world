@@ -40,6 +40,17 @@ const components: PortableTextComponents = {
     h2: ({ children }) => <h2 className="text-3xl font-semibold mt-10 mb-4">{children}</h2>,
     h3: ({ children }) => <h3 className="text-2xl font-semibold mt-8 mb-3">{children}</h3>,
     normal: ({ children }) => <p className="leading-7 my-4">{children}</p>,
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-4 border-gray-300 pl-4 italic my-6 text-lg text-gray-700">
+        {children}
+      </blockquote>
+    ),
+  },
+  list: {
+    bullet: ({ children }) => <ul className="list-disc list-inside space-y-2 my-8">{children}</ul>,
+    number: ({ children }) => (
+      <ol className="list-decimal list-inside space-y-2 my-8">{children}</ol>
+    ),
   },
 };
 

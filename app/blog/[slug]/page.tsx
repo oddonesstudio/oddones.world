@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       },
       backgroundColor,
       excerpt,
-  	  "pixelAsset": pixelAsset->svg
+      "pixel": icon->svg
     }
   `;
 
@@ -71,15 +71,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <PageWrapper invert>
+    <div className="mt-[calc(var(--header-height)*-1)]">
       <Article
         bgColor={bgColor[data.backgroundColor as BackgroundColor]}
         featuredImage={featuredImage}
         title={data.title}
         body={data.body}
         excerpt={data.excerpt}
-        pixel={data.pixelAsset}
+        pixel={data.pixel}
       />
-    </PageWrapper>
+    </div>
   );
 }

@@ -42,7 +42,7 @@ export default defineType({
               name: "pixelIcon",
               title: "Pixel Icon",
               type: "reference",
-              to: [{ type: "pixelAsset" }],
+              to: [{ type: "pixel" }],
               hidden: ({ parent }) => parent?.iconType !== "pixel",
             },
             {
@@ -97,7 +97,7 @@ export default defineType({
               name: "pixelIcon",
               title: "Pixel Icon",
               type: "reference",
-              to: [{ type: "pixelAsset" }],
+              to: [{ type: "pixel" }],
               hidden: ({ parent }) => parent?.iconType !== "pixel",
             },
             {

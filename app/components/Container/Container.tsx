@@ -1,26 +1,16 @@
-import { tv, type VariantProps } from "tailwind-variants";
-import { cn } from "@/app/utils/cn";
+import type { PropsWithChildren } from "react";
+import { tv } from "tailwind-variants";
 
-const containerStyles = tv({
-  base: "w-full mx-auto",
-  variants: {
-    variant: {
-      default: "px-6",
-      editorial: "max-w-[1280px] px-[clamp(1rem,5vw,80px)]",
-      prose: "max-w-[65ch] px-[clamp(1rem,4vw,40px)]",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
+const styles = tv({
+  base: `
+    mx-auto w-full 
+    max-w-container 
+    px-container-sm
+    md:px-container-md
+    lg:px-container-lg
+  `,
 });
 
-type ContainerProps = React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof containerStyles>;
-
-export function Container({ variant, className, children, ...props }: ContainerProps) {
-  return (
-    <div className={cn(containerStyles({ variant }), className)} {...props}>
-      {children}
-    </div>
-  );
-}
+export const Container = ({ children, className }: PropsWithChildren & { className?: string }) => {
+  return <div className={styles({ className })}>{children}</div>;
+};

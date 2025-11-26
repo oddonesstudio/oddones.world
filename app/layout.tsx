@@ -5,6 +5,8 @@ import { getMetadata } from "@/sanity/getMetadata";
 import type { SiteSettings } from "@/studio/sanity.types";
 
 import { Header } from "./components/Header";
+import { PageTransitionFooter } from "./components/PageTransitionFooter";
+
 import "./globals.css";
 
 const bowlby = Bowlby_One({
@@ -55,7 +57,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en">
       <body className={`${bowlby.variable} ${roboto.variable}`}>
         <Header nav={siteSettings.navigation} />
-        <main>{children}</main>
+        <main className="mb-100">{children}</main>
+        <PageTransitionFooter />
       </body>
     </html>
   );

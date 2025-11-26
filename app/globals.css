@@ -12,7 +12,19 @@
 
   --page-max-w: 80ch;
 
-  --header-height: 148px;
+  --header-height: 172px;
+
+  --container-max: 1440px;
+
+  /* horizontal padding */
+  --container-padding-sm: 1rem;   /* 16px */
+  --container-padding-md: 2rem;   /* 32px */
+  --container-padding-lg: 4rem;   /* 64px */
+
+  /* vertical rhythm */
+  --space-section-sm: 2rem;
+  --space-section-md: 4rem;
+  --space-section-lg: 6rem;
 }
 
 @theme inline {
@@ -22,6 +34,16 @@
 
   --font-heading: var(--font-bowlby);
   --font-sans: var(--font-sans);
+
+  --max-w-container: var(--container-max);
+
+  --spacing-container-sm: var(--container-padding-sm);
+  --spacing-container-md: var(--container-padding-md);
+  --spacing-container-lg: var(--container-padding-lg);
+
+  --spacing-section-sm: var(--space-section-sm);
+  --spacing-section-md: var(--space-section-md);
+  --spacing-section-lg: var(--space-section-lg);
 }
 
 html {
@@ -32,4 +54,5 @@ html {
 body {
   font-family: var(--font-sans);
   background-color: var(--page-background);
+
 }

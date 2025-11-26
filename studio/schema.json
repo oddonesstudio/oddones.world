@@ -572,7 +572,7 @@
               "optional": true
             }
           },
-          "dereferencesTo": "pixelAsset"
+          "dereferencesTo": "pixel"
         },
         "optional": true
       },
@@ -836,7 +836,7 @@
                       "optional": true
                     }
                   },
-                  "dereferencesTo": "pixelAsset"
+                  "dereferencesTo": "pixel"
                 },
                 "optional": true
               },
@@ -1003,7 +1003,7 @@
                       "optional": true
                     }
                   },
-                  "dereferencesTo": "pixelAsset"
+                  "dereferencesTo": "pixel"
                 },
                 "optional": true
               },
@@ -1273,7 +1273,7 @@
           "type": "string"
         }
       },
-      "title": {
+      "heading": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -1285,13 +1285,6 @@
         "value": {
           "type": "inline",
           "name": "slug"
-        },
-        "optional": true
-      },
-      "heading": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
         },
         "optional": true
       },
@@ -1328,7 +1321,7 @@
               "optional": true
             }
           },
-          "dereferencesTo": "pixelAsset"
+          "dereferencesTo": "pixel"
         },
         "optional": true
       },
@@ -1459,7 +1452,7 @@
     }
   },
   {
-    "name": "pixelAsset",
+    "name": "pixel",
     "type": "document",
     "attributes": {
       "_id": {
@@ -1472,7 +1465,7 @@
         "type": "objectAttribute",
         "value": {
           "type": "string",
-          "value": "pixelAsset"
+          "value": "pixel"
         }
       },
       "_createdAt": {
@@ -1493,6 +1486,13 @@
           "type": "string"
         }
       },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "svg": {
         "type": "objectAttribute",
         "value": {
@@ -1500,7 +1500,7 @@
         },
         "optional": true
       },
-      "title": {
+      "json": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

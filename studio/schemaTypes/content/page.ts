@@ -6,21 +6,16 @@ export default defineType({
   type: "document",
   fields: [
     defineField({
-      name: "title",
-      title: "Title",
+      name: "heading",
+      title: "Heading",
       type: "string",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "pageTitle" },
-    }),
-    defineField({
-      name: "heading",
-      title: "Heading",
-      type: "string",
-      validation: (Rule) => Rule.required(),
+      options: { source: "heading" },
     }),
     defineField({
       name: "intro",
@@ -28,19 +23,36 @@ export default defineType({
       type: "text",
       rows: 3,
     }),
-    {
+    defineField({
       name: "pixelPuzzle",
       title: "Pixel Puzzle",
       type: "reference",
-      to: [{ type: "pixelAsset" }],
-      options: {
-        disableNew: false,
-      },
-    },
+      to: [{ type: "pixel" }],
+      options: { disableNew: false },
+    }),
+    defineField({
+      name: "articles",
+      title: "Articles",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "article" }] }],
+    }),
     defineField({
       name: "seo",
       title: "SEO",
       type: "seo",
     }),
   ],
+
+  preview: {
+    select: {
+      slug: "slug.current",
+    },
+    prepare({ slug }) {
+      return {
+        title:
+          (slug === "/" ? "Home" : slug.charAt(0).toUpperCase() + slug.slice(1)) || "Untitled Page",
+        subtitle: slug ? `${slug === "/" ? slug : `/${slug}`}` : "",
+      };
+    },
+  },
 });

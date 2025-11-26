@@ -70,10 +70,10 @@ export default defineType({
       of: [{ type: "block" }, { type: "image" }],
     }),
     defineField({
-      name: "icon",
-      title: "Icon",
+      name: "puzzle",
+      title: "Puzzle",
       type: "reference",
-      to: [{ type: "pixelAsset" }],
+      to: [{ type: "pixel" }],
       options: { disableNew: false },
     }),
     defineField({

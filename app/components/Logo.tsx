@@ -27,9 +27,10 @@ interface LogoProps {
   size?: "sm" | "md" | "lg";
   animate?: "none" | "pulse" | "spin";
   className?: string;
+  framed?: boolean;
 }
 
-export const Logo = ({ size, animate, className }: LogoProps) => {
+export const Logo = ({ size, animate, className, framed = false }: LogoProps) => {
   const animationProps =
     animate === "pulse"
       ? {
@@ -47,7 +48,7 @@ export const Logo = ({ size, animate, className }: LogoProps) => {
           }
         : {};
 
-  return (
+  const svg = (
     <motion.svg
       width="53"
       height="45"
@@ -67,4 +68,8 @@ export const Logo = ({ size, animate, className }: LogoProps) => {
       <path d="M19.375 13.3125H8.59375V34.8438H19.375V13.3125Z" />
     </motion.svg>
   );
+
+  if (!framed) return svg;
+
+  return <div className="bg-page-background p-1 pb-2 inline-block">{svg}</div>;
 };
