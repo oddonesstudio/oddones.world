@@ -57,7 +57,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en">
       <body className={`${bowlby.variable} ${roboto.variable}`}>
         <Header nav={siteSettings.navigation} />
-        <main className="mb-100">{children}</main>
+        <main className="min-h-full mt-[calc(var(--header-height)*-1)] pt-(--header-height)">
+          {children}
+        </main>
         <PageTransitionFooter />
       </body>
     </html>

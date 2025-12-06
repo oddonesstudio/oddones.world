@@ -18,6 +18,11 @@ export default defineType({
       options: { source: "heading" },
     }),
     defineField({
+      name: "themeColor",
+      title: "Theme Color",
+      type: "color",
+    }),
+    defineField({
       name: "intro",
       title: "Intro Text",
       type: "text",

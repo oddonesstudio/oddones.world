@@ -71,7 +71,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <div className="mt-[calc(var(--header-height)*-1)]">
+    <div className="mt-[calc(var(--header-height)*-1)] pb-[537px]">
       <Article
         bgColor={bgColor[data.backgroundColor as BackgroundColor]}
         featuredImage={featuredImage}

@@ -10,6 +10,8 @@ import { SectionHeader } from "./components/SectionHeader";
 import { homePageQuery } from "./queries/homePage";
 
 import { resolvePixelIconByTitle } from "./utils/iconResolver";
+// import { getContrastingColor } from "./utils/getContrastingColor";
+// import { Video } from "./components/Video";
 
 export default async function Home() {
   const data = await client.fetch(homePageQuery);
@@ -22,13 +24,19 @@ export default async function Home() {
       image: article?.coverImage ? urlFor(article.coverImage).width(1200).url() : undefined,
     })) ?? [];
 
+  // const { h, s, l } = data.themeColor;
+  // const bg = `hsl(${h}, ${s}%, ${l}%)`;
+  // const fg = getContrastingColor(data.themeColor);
+
   return (
-    <Container>
-      <div className="flex flex-col gap-20">
-        <SectionHeader {...data} closeIcon={closeIcon} playIcon={playIcon} />
-        {/* <Video className="aspect-video w-full" playIcon={playIcon} /> */}
-        <ArticleGrid articles={articles} />
-      </div>
-    </Container>
+    <div className="mt-[calc(var(--header-height)*-1)] pt-(--header-height) pb-[537px]">
+      <Container>
+        <div className="flex flex-col gap-20">
+          <SectionHeader {...data} closeIcon={closeIcon} playIcon={playIcon} />
+          {/* <Video className="aspect-video w-full" playIcon={playIcon} /> */}
+          <ArticleGrid articles={articles} />
+        </div>
+      </Container>
+    </div>
   );
 }
