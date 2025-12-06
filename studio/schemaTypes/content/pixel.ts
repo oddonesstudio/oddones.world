@@ -1,6 +1,6 @@
 import { defineField, defineType } from "sanity";
 
-import { PixelCanvas } from "../../../app/components/PixelCanvas";
+import { PixelCanvas } from "../../components/PixelCanvas";
 
 export default defineType({
   name: "pixel",
