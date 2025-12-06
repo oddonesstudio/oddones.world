@@ -1,5 +1,5 @@
-import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { client } from "@/sanityLib/client";
+import { urlFor } from "@/sanityLib/image";
 
 import type { Article } from "@/studio/sanity.types";
 

@@ -4,9 +4,9 @@ import type { BackgroundColor, BackgroundColorMap } from "@/app/blog/[slug]/page
 import { Article } from "@/app/components/Article/Article";
 import { PageWrapper } from "@/app/components/PageWrapper";
 
-import { client } from "@/sanity/client";
-import { getMetadata } from "@/sanity/getMetadata";
-import { urlFor } from "@/sanity/image";
+import { client } from "@/sanityLib/client";
+import { getMetadata } from "@/sanityLib/getMetadata";
+import { urlFor } from "@/sanityLib/image";
 
 export const dynamic = "force-dynamic";
 

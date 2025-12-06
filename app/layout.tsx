@@ -1,7 +1,7 @@
 import { Bowlby_One, Roboto } from "next/font/google";
 
-import { client } from "@/sanity/client";
-import { getMetadata } from "@/sanity/getMetadata";
+import { client } from "@/sanityLib/client";
+import { getMetadata } from "@/sanityLib/getMetadata";
 import type { SiteSettings } from "@/studio/sanity.types";
 
 import { Header } from "./components/Header";

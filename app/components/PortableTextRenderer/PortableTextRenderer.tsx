@@ -3,7 +3,7 @@
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import Image from "next/image";
 import Link from "next/link";
-import { urlFor } from "@/sanity/image";
+import { urlFor } from "@/sanityLib/image";
 
 const components: PortableTextComponents = {
   types: {

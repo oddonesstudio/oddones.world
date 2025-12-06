@@ -1,4 +1,4 @@
-import { client } from "@/sanity/client";
+import { client } from "@/sanityLib/client";
 
 export async function getPixelIconByTitle(title: string) {
   const query = `*[_type == "pixel" && title == $title][0]{svg}`;

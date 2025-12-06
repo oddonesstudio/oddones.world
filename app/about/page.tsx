@@ -1,5 +1,5 @@
-import { client } from "@/sanity/client";
-import { getMetadata } from "@/sanity/getMetadata";
+import { client } from "@/sanityLib/client";
+import { getMetadata } from "@/sanityLib/getMetadata";
 
 import AboutClient from "./AboutClient";
 
