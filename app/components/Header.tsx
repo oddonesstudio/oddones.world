@@ -13,7 +13,7 @@ import { PixelReveal } from "./PixelReveal/PixelReveal";
 
 const styles = tv({
   slots: {
-    base: "sticky top-0 w-full flex justify-between p-8 md:px-20 md:pt-12 md:pb-20 items-end z-30",
+    base: "sticky top-0 w-full flex justify-between p-8 md:px-20 md:pt-18 md:pb-20 items-end z-30",
     logoTab: "hidden h-full md:flex items-end bg-black p-8 absolute top-0 left-20 cursor-pointer",
     logoFrame: "h-fit bg-page-background p-1 pb-2",
     nav: "flex gap-10 text-xl",

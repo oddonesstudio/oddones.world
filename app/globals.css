@@ -12,14 +12,14 @@
 
   --page-max-w: 80ch;
 
-  --header-height: 172px;
+  --header-height: 180px;
 
   --container-max: 1440px;
 
   /* horizontal padding */
-  --container-padding-sm: 1rem;   /* 16px */
-  --container-padding-md: 2rem;   /* 32px */
-  --container-padding-lg: 4rem;   /* 64px */
+  --container-padding-sm: 1rem; /* 16px */
+  --container-padding-md: 2rem; /* 32px */
+  --container-padding-lg: 4rem; /* 64px */
 
   /* vertical rhythm */
   --space-section-sm: 2rem;
@@ -54,5 +54,4 @@ html {
 body {
   font-family: var(--font-sans);
   background-color: var(--page-background);
-
 }

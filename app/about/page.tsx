@@ -1,6 +1,9 @@
 import { client } from "@/sanityLib/client";
 import { getMetadata } from "@/sanityLib/getMetadata";
 
+import { PageWrapper } from "../components/PageWrapper";
+import { resolvePixelIconByTitle } from "../utils/iconResolver";
+
 import AboutClient from "./AboutClient";
 
 export const dynamic = "force-static";
@@ -16,12 +19,18 @@ export default async function AboutPage() {
         intro,
         pixelPuzzle->{
           title,
-          svg
+          svg,
+          json
         },
       }
     `;
 
   const data = await client.fetch(query);
+  const closeIcon = await resolvePixelIconByTitle("Close");
 
-  return <AboutClient {...data} />;
+  return (
+    <PageWrapper bgColor="#FFD866">
+      <AboutClient {...data} closeIcon={closeIcon} />
+    </PageWrapper>
+  );
 }

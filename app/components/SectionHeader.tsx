@@ -34,7 +34,7 @@ export const SectionHeader = ({
   const hasPuzzle = !!solutionSource;
 
   return (
-    <div className="flex flex-col gap-20 justify-center items-center text-center mt-20">
+    <div className="flex flex-col gap-20 justify-center items-center text-center mt-(--header-height)">
       <div className="flex items-center">
         {/* {hasPuzzle && (
           <PuzzleDialog

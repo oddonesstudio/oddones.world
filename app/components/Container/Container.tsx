@@ -3,7 +3,7 @@ import { tv } from "tailwind-variants";
 
 const styles = tv({
   base: `
-    mx-auto w-full 
+    mx-auto w-full
     max-w-container 
     px-container-sm
     md:px-container-md

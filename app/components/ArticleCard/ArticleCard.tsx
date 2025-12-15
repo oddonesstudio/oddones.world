@@ -10,13 +10,13 @@ export interface ArticleCardProps {
 
 export const ArticleCard = ({ slug, title, excerpt, image }: ArticleCardProps) => {
   return (
-    <div className="flex flex-col gap-4 bg-page-background rounded-lg overflow-clip relative hover:-translate-y-1">
+    <div className="rounded-lg overflow-clip relative hover:-translate-y-1 w-[300px]">
       {image && (
-        <div className="relative w-full aspect-3/2">
-          <Image src={image} alt={""} fill />
+        <div className="aspect-square">
+          <Image src={image} alt={""} fill objectFit="cover" />
         </div>
       )}
-      <div>
+      {/* <div>
         {title && <h3>{title}</h3>}
         {excerpt && <p>{excerpt}</p>}
         {slug && (
@@ -24,7 +24,7 @@ export const ArticleCard = ({ slug, title, excerpt, image }: ArticleCardProps) =
             Read
           </Link>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

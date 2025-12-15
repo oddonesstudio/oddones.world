@@ -5,6 +5,7 @@ import { Dialog } from "radix-ui";
 import { useState } from "react";
 
 import { getGridClues } from "@/app/modules/pixel";
+import { gridToSvg } from "@/app/modules/pixel/gridToSvg";
 import { normaliseGrid } from "@/app/modules/pixel/normaliseGrid";
 import type { Grid } from "@/app/modules/pixel/parseGrid";
 
@@ -13,24 +14,6 @@ import { Icon } from "./Icon/Icon";
 import { PixelReveal } from "./PixelReveal/PixelReveal";
 
 type CellState = "empty" | "filled" | "cross";
-
-// Build a simple SVG from a grid for the trigger thumbnail.
-const gridToSvg = (grid: Grid, cellSize = 10) => {
-  const rows = grid.length;
-  const cols = grid[0]?.length || 0;
-  const rects: string[] = [];
-  grid.forEach((row, r) => {
-    row.forEach((cell, c) => {
-      if (!cell) return;
-      rects.push(
-        `<rect x="${c * cellSize}" y="${r * cellSize}" width="${cellSize}" height="${cellSize}" fill="${cell}"/>`,
-      );
-    });
-  });
-  const width = cols * cellSize;
-  const height = rows * cellSize;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${rects.join("")}</svg>`;
-};
 
 export const PuzzleDialog = ({
   title,
@@ -53,6 +36,7 @@ export const PuzzleDialog = ({
   const [complete, setComplete] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [open, setOpen] = useState(false);
+  const [showGuides, setShowGuides] = useState(true);
 
   function handleCellClick(r: number, c: number) {
     setGridState((prev) => {
@@ -84,12 +68,21 @@ export const PuzzleDialog = ({
     }
   }
 
+  function getGroupSize(gridSize: number) {
+    if (gridSize <= 16) return 4;
+    if (gridSize <= 24) return 4;
+    if (gridSize <= 32) return 4;
+    if (gridSize <= 40) return 5;
+    return Math.floor(gridSize / 6);
+  }
+
   // Prefer provided solution, otherwise fall back to SVG. If neither, skip render.
   const source = solution ?? svg;
   if (!source) return null;
 
   // Accept JSON strings or arrays; if single quotes slipped through, normalise them.
   const sanitisedSolution = typeof source === "string" ? source.replace(/'/g, '"') : source;
+
   const solutionGrid = normaliseGrid(sanitisedSolution);
 
   const { rowClues, colClues } = getGridClues(solutionGrid);
@@ -103,8 +96,8 @@ export const PuzzleDialog = ({
 
   if (!rows || !cols) return null;
 
-  const triggerGrid = solutionGrid.map((row) => row.map((cell) => (cell === 0 ? "#000000" : cell)));
-  const triggerSvg = svg || gridToSvg(triggerGrid);
+  // const triggerGrid = solutionGrid.map((row) => row.map((cell) => (cell === 0 ? "#000000" : cell)));
+  const triggerSvg = svg || gridToSvg(solutionGrid);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -170,12 +163,16 @@ export const PuzzleDialog = ({
                   row.map((_: any, c: number) => {
                     const state = gridState[r][c];
                     const target: string = solutionGrid[r][c] as string;
-                    const bg =
-                      state === "filled"
-                        ? target || "#000"
-                        : state === "cross"
-                          ? "#ddd"
-                          : "#f9f9f9";
+                    const bg = state === "filled" ? target : state === "cross" ? "#ddd" : "#f9f9f9";
+                    const gridSize = solutionGrid.length;
+                    const GROUP_SIZE = getGroupSize(gridSize);
+
+                    const isGuideRow = showGuides && r % GROUP_SIZE === 0;
+                    const isGuideCol = showGuides && c % GROUP_SIZE === 0;
+
+                    const baseBorder = "#e5e7eb"; // Tailwind gray-300
+                    const guideBorder = "#9ca3af"; // Tailwind gray-400
+
                     return (
                       <button
                         key={`${r}-${c}`}
@@ -185,6 +182,12 @@ export const PuzzleDialog = ({
                         style={{
                           backgroundColor: bg,
                           color: state === "cross" ? "#555" : "transparent",
+                          borderTopWidth: isGuideRow ? "2px" : "1px",
+                          borderLeftWidth: isGuideCol ? "2px" : "1px",
+                          borderTopColor: isGuideRow ? guideBorder : baseBorder,
+                          borderLeftColor: isGuideCol ? guideBorder : baseBorder,
+                          borderRightColor: baseBorder,
+                          borderBottomColor: baseBorder,
                         }}
                       >
                         {state === "cross" ? "✕" : ""}
@@ -196,7 +199,8 @@ export const PuzzleDialog = ({
             </div>
           </Container>
 
-          {/* <Button label="Check" onClick={handleCheck}></Button> */}
+          {/* <Button label="Check" onClick={handleCheck}></Button>
+          <Button label="Show Guides" onClick={() => setShowGuides(!showGuides)}></Button> */}
 
           {complete && <p className="mt-4 text-green-600">Yay! You solved it!</p>}
           {error && !complete && <p className="mt-4 text-red-400">{error}</p>}

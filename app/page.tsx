@@ -5,6 +5,7 @@ import type { Article } from "@/studio/sanity.types";
 
 import { ArticleGrid } from "./components/ArticleGrid/ArticleGrid";
 import { Container } from "./components/Container/Container";
+import { PageWrapper } from "./components/PageWrapper";
 import { SectionHeader } from "./components/SectionHeader";
 
 import { homePageQuery } from "./queries/homePage";
@@ -29,7 +30,7 @@ export default async function Home() {
   // const fg = getContrastingColor(data.themeColor);
 
   return (
-    <div className="mt-[calc(var(--header-height)*-1)] pt-(--header-height) pb-[537px]">
+    <PageWrapper>
       <Container>
         <div className="flex flex-col gap-20">
           <SectionHeader {...data} closeIcon={closeIcon} playIcon={playIcon} />
@@ -37,6 +38,6 @@ export default async function Home() {
           <ArticleGrid articles={articles} />
         </div>
       </Container>
-    </div>
+    </PageWrapper>
   );
 }
