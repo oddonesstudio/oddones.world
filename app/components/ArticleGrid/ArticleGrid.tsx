@@ -6,7 +6,7 @@ interface ArticleGridProps {
 
 export const ArticleGrid = ({ articles }: ArticleGridProps) => {
   return (
-    <div className="grid md:grid-cols-3 gap-4 max-w-[1110px] mx-auto">
+    <div className="grid md:grid-cols-4 gap-4 mx-auto">
       {articles?.map((article, idx) => {
         const { _key, ...cardProps } = article;
 

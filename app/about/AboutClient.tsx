@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { unstable_PasswordToggleField as PasswordToggleField } from "radix-ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "../components/Button/Button";
 import { PuzzleDialog } from "../components/PuzzleDialog";
@@ -37,6 +37,15 @@ export default function AboutClient({
   const svgMarkup = pixelPuzzle?.svg;
   const solutionSource = pixelPuzzle?.json ?? pixelPuzzle?.svg;
   const hasPuzzle = !!solutionSource;
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
