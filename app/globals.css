@@ -14,7 +14,6 @@
   --page-max-w: 80ch;
 
   --header-height: 180px;
-  --footer-height: 474px;
 
   --container-max: 1440px;
 
@@ -30,6 +29,8 @@
 }
 
 @theme inline {
+  --footer-height: 474px;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-page-background: var(--page-background);

@@ -79,7 +79,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   return (
     <PageWrapper
-      scopedTheme={page.coverImage ? bgHSL ?? undefined : undefined}
+      scopedTheme={page.coverImage ? (bgHSL ?? undefined) : undefined}
       useStoredTheme={!page.coverImage}
     >
       <Article
@@ -104,13 +104,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             />
           ) : null
         }
-        tags={page.tagGroupSections?.map((section: any) => ({
-          heading: section.heading,
-          groups: section.groups?.map((group: any) => ({
-            emoji: group.emoji,
-            tags: group.tags,
-          })),
-        }))}
+        // tags={page.tagGroupSections?.map((section: any) => ({
+        //   heading: section.heading,
+        //   groups: section.groups?.map((group: any) => ({
+        //     emoji: group.emoji,
+        //     tags: group.tags,
+        //   })),
+        // }))}
       />
     </PageWrapper>
   );

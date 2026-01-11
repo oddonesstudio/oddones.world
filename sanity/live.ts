@@ -24,6 +24,8 @@ const { sanityFetch: sanityFetchBase, SanityLive } = defineLive({
 
 export const sanityFetch = sanityFetchBase as <T = unknown>(params: {
   query: string;
+  params?: Record<string, unknown>;
+  stega?: boolean;
 }) => Promise<{ data: T | null }>;
 
 export { SanityLive };

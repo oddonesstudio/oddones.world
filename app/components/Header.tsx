@@ -54,7 +54,7 @@ const styles = tv({
 
 interface HeaderProps {
   background?: boolean;
-  nav: SiteSettings["navigation"];
+  nav: any;
 }
 
 export const Header = (props: HeaderProps) => {

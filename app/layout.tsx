@@ -10,6 +10,7 @@ import { PageTransitionFooter } from "./components/PageTransitionFooter";
 
 import "./globals.css";
 import { siteSettingsQuery } from "@/studio/queries/siteSettings";
+import { SiteSettingsQueryResult } from "@/studio/sanity.types";
 
 const bowlby = Bowlby_One({
   variable: "--font-bowlby",
@@ -28,7 +29,7 @@ export async function generateMetadata() {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const { data: siteSettings } = await sanityFetch({
+  const { data: siteSettings } = await sanityFetch<SiteSettingsQueryResult>({
     query: siteSettingsQuery,
     stega: false,
   });
@@ -37,7 +38,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en">
       <body className={`${bowlby.variable} ${roboto.variable} bg-black`}>
-        <Header nav={siteSettings.navigation} />
+        <Header nav={siteSettings?.navigation} />
         <main>{children}</main>
         <PageTransitionFooter />
         <SanityLive />
