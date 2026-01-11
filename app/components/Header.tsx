@@ -10,23 +10,19 @@ import type { SiteSettings } from "@/studio/sanity.types";
 
 import { Logo } from "./Logo";
 import { PixelReveal } from "./PixelReveal/PixelReveal";
+import { Button } from "./Button/Button";
 
 const styles = tv({
   slots: {
-    base: "sticky top-0 w-full flex justify-between p-8 md:px-20 md:pt-18 md:pb-20 items-end z-30",
+    base: "fixed top-0 w-full flex justify-end p-8 md:px-20 md:pt-18 md:pb-20 items-end z-40",
     logoTab: "hidden h-full md:flex items-end bg-black p-8 absolute top-0 left-20 cursor-pointer",
     logoFrame: "h-fit bg-page-background p-1 pb-2",
     nav: "flex gap-10 text-xl",
-    navItem: "flex gap-2 items-center",
+    navItem: "flex gap-2 items-center hover:underline",
     navIcon: "",
+    button: "justify-self-end",
   },
   variants: {
-    invert: {
-      true: { nav: "text-white" },
-      false: {
-        nav: "text-black",
-      },
-    },
     disabled: {
       true: {
         navItem: "opacity-40 *:cursor-not-allowed",
@@ -34,22 +30,22 @@ const styles = tv({
       false: {},
     },
   },
-  compoundVariants: [
-    {
-      disabled: true,
-      invert: true,
-      className: {
-        nav: "text-[#ccc]",
-      },
-    },
-    {
-      disabled: true,
-      invert: false,
-      className: {
-        nav: "text-[#444]",
-      },
-    },
-  ],
+  // compoundVariants: [
+  //   {
+  //     disabled: true,
+  //     invert: true,
+  //     className: {
+  //       nav: "text-[#ccc]",
+  //     },
+  //   },
+  //   {
+  //     disabled: true,
+  //     invert: false,
+  //     className: {
+  //       nav: "text-[#444]",
+  //     },
+  //   },
+  // ],
   defaultVariants: {
     invert: false,
     disabled: false,
@@ -82,9 +78,10 @@ export const Header = (props: HeaderProps) => {
   };
 
   const pathname = usePathname();
-  const invert = ["/about", "/blog"].some((prefix) => pathname.startsWith(prefix));
+  const aboutPath = "/article/creative-frontend-engineer-resume-2026";
+  const navColor = pathname.startsWith("/article") ? "#ffffff" : "var(--foreground-contrast)";
 
-  const { base, logoTab, logoFrame, nav, navItem } = styles();
+  const { base, button, logoTab, logoFrame, nav, navItem } = styles();
 
   return (
     <motion.header
@@ -105,17 +102,20 @@ export const Header = (props: HeaderProps) => {
       </Link>
 
       <nav>
-        <ul className={nav({ invert })}>
+        <ul className={`${nav()} opacity-80`} style={{ color: navColor }}>
           {props.nav?.map((item: any) => (
             <li key={item._key} className={navItem({ disabled: !item.slug })}>
-              <PixelReveal svg={item.pixelIcon?.svg} />
+              {/* <PixelReveal svg={item.pixelIcon?.svg} /> */}
               <Link
-                href={`/${item.slug ?? ""}`}
-                className={`${pathname === `/${item.slug}` && "underline"}`}
+                href={item.slug === "about" ? aboutPath : `/${item.slug ?? ""}`}
+                className={`${
+                  (item.slug === "about" ? pathname === aboutPath : pathname === `/${item.slug}`) &&
+                  "underline"
+                }`}
               >
                 {item.label}
               </Link>
-              <PixelReveal svg={item.pixelIcon?.svg} />
+              {/* <PixelReveal svg={item.pixelIcon?.svg} /> */}
             </li>
           ))}
         </ul>

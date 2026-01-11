@@ -4,6 +4,7 @@
   --page-dark: #1b1b1b;
   --background: hsl(200, 100%, 50%);
   --foreground: #fff;
+  --foreground-contrast: #000;
   --page-background: #fefffa;
 
   --page-padding-sm: 1rem;
@@ -13,6 +14,7 @@
   --page-max-w: 80ch;
 
   --header-height: 180px;
+  --footer-height: 474px;
 
   --container-max: 1440px;
 
@@ -53,5 +55,25 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--page-background);
+  /* TODO: Home only (ThemePicker) */
+  /* background-color: var(--background); */
+  /* color: var(--foreground); */
+}
+
+html.theme-loading #page-content {
+  visibility: hidden;
+  opacity: 0;
+}
+
+#page-content {
+  opacity: 0;
+  transition:
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html:not(.theme-loading) #page-content {
+  visibility: visible;
+  opacity: 1;
 }

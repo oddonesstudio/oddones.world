@@ -2,11 +2,21 @@
 
 import type { PropsWithChildren } from "react";
 
-export const PageWrapper = ({ children, bgColor }: PropsWithChildren & { bgColor?: string }) => (
-  <section
-    className="relative flex w-full min-h-[calc(100vh-48px)] items-center justify-center rounded-3xl"
-    style={{ backgroundColor: bgColor ?? "var(--page-background)" }}
-  >
-    {children}
-  </section>
-);
+import ThemeScope from "./ThemeScope";
+import ThemeStorage from "./ThemeStorage";
+import type { HSL } from "./themeUtils";
+
+interface PageWrapperProps extends PropsWithChildren {
+  scopedTheme?: HSL | null;
+  useStoredTheme?: boolean;
+}
+
+export const PageWrapper = ({ children, scopedTheme, useStoredTheme = true }: PageWrapperProps) => {
+  return (
+    <section className="flex flex-col gap-10 pb-(--footer-height) min-h-screen bg-background p-4">
+      {children}
+      {scopedTheme ? <ThemeScope theme={scopedTheme} /> : null}
+      <ThemeStorage enabled={useStoredTheme && !scopedTheme} />
+    </section>
+  );
+};

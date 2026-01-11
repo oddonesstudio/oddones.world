@@ -1,10 +1,10 @@
-import { client } from "@/sanityLib/client";
-import { getMetadata } from "@/sanityLib/getMetadata";
+import { getMetadata } from "@/sanity/getMetadata";
+import { sanityFetch } from "@/sanity/live";
 
 import { PageWrapper } from "../components/PageWrapper";
 import { resolvePixelIconByTitle } from "../utils/iconResolver";
 
-import AboutClient from "./AboutClient";
+import ArticleAccessGate from "@/app/components/ArticleAccessGate";
 
 export const dynamic = "force-static";
 
@@ -25,12 +25,19 @@ export default async function AboutPage() {
       }
     `;
 
-  const data = await client.fetch(query);
+  const { data } = await sanityFetch({ query });
   const closeIcon = await resolvePixelIconByTitle("Close");
 
+  // TODO: fetch bg from Sanity
   return (
     <PageWrapper bgColor="#FFD866">
-      <AboutClient {...data} closeIcon={closeIcon} />
+      <ArticleAccessGate
+        title={data?.heading}
+        intro={data?.intro}
+        pixelPuzzle={data?.pixelPuzzle}
+        closeIcon={closeIcon}
+        storageKey="about-unlocked"
+      />
     </PageWrapper>
   );
 }

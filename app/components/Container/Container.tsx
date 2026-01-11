@@ -5,7 +5,7 @@ const styles = tv({
   base: `
     mx-auto w-full
     max-w-container 
-    px-container-sm pb-[500px]
+    px-container-sm pt-(--header-height)
     md:px-container-md
     lg:px-container-lg
   `,

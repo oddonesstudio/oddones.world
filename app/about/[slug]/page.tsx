@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
 
-import type { BackgroundColor, BackgroundColorMap } from "@/app/blog/[slug]/page";
-import { Article } from "@/app/components/Article/Article";
+import type { BackgroundColor, BackgroundColorMap } from "@/app/article/[slug]/page";
+import { Article } from "@/app/layouts/Article/Article";
 import { PageWrapper } from "@/app/components/PageWrapper";
 
-import { client } from "@/sanityLib/client";
-import { getMetadata } from "@/sanityLib/getMetadata";
-import { urlFor } from "@/sanityLib/image";
+import { getMetadata } from "@/sanity/getMetadata";
+import { urlFor } from "@/sanity/image";
+import { sanityFetch } from "@/sanity/live";
 
 export const dynamic = "force-dynamic";
 
@@ -52,7 +52,7 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
     }
   `;
 
-  const data = await client.fetch(query, { slug });
+  const { data } = await sanityFetch({ query, params: { slug } });
 
   if (!data) return notFound();
 
@@ -60,17 +60,26 @@ export default async function AboutArticle({ params }: { params: Promise<{ slug:
   const mutedBgColor = data.coverImage?.asset?.metadata?.palette?.muted?.background;
   const vibrantBgColor = data.coverImage?.asset?.metadata?.palette?.vibrant?.background;
   const dominantBgColor = data.coverImage?.asset?.metadata?.palette?.dominant?.background;
+  const mutedFgColor = data.coverImage?.asset?.metadata?.palette?.muted?.foreground;
+  const vibrantFgColor = data.coverImage?.asset?.metadata?.palette?.vibrant?.foreground;
+  const dominantFgColor = data.coverImage?.asset?.metadata?.palette?.dominant?.foreground;
 
   const bgColor: BackgroundColorMap = {
     muted: mutedBgColor,
     vibrant: vibrantBgColor,
     dominant: dominantBgColor,
   };
+  const fgColor: BackgroundColorMap = {
+    muted: mutedFgColor,
+    vibrant: vibrantFgColor,
+    dominant: dominantFgColor,
+  };
 
   return (
     <PageWrapper>
       <Article
         bgColor={bgColor[data.backgroundColor as BackgroundColor]}
+        fgColor={fgColor[data.backgroundColor as BackgroundColor]}
         featuredImage={featuredImage}
         title={data.title}
         body={data.body}
