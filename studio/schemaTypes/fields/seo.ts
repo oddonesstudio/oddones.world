@@ -4,6 +4,7 @@ export default defineType({
   name: "seo",
   title: "SEO Overrides",
   type: "object",
+  options: { collapsible: true, collapsed: true },
   fields: [
     defineField({ name: "title", title: "Meta Title", type: "string" }),
     defineField({ name: "description", title: "Meta Description", type: "text", rows: 3 }),

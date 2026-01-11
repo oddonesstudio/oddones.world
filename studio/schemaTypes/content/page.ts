@@ -21,6 +21,7 @@ export default defineType({
       name: "themeColor",
       title: "Theme Color",
       type: "color",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "intro",

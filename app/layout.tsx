@@ -1,13 +1,15 @@
 import { Bowlby_One, Roboto } from "next/font/google";
+import { VisualEditing } from "next-sanity/visual-editing";
+import { draftMode } from "next/headers";
 
-import { client } from "@/sanityLib/client";
-import { getMetadata } from "@/sanityLib/getMetadata";
-import type { SiteSettings } from "@/studio/sanity.types";
+import { getMetadata } from "@/sanity/getMetadata";
+import { sanityFetch, SanityLive } from "@/sanity/live";
 
 import { Header } from "./components/Header";
 import { PageTransitionFooter } from "./components/PageTransitionFooter";
 
 import "./globals.css";
+import { siteSettingsQuery } from "@/studio/queries/siteSettings";
 
 const bowlby = Bowlby_One({
   variable: "--font-bowlby",
@@ -26,41 +28,20 @@ export async function generateMetadata() {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const query = `*[_type == "siteSettings"][0]{
-      navigation[] {
-        _key,
-        label,
-        "slug": page->slug.current,
-        iconType,
-        pixelIcon->{
-          title,
-          svg
-        },
-        "uploadedIcon": uploadedIcon.asset->url
-      },
-      footerText,
-      socialLinks[] {
-        platform,
-        url,
-        iconType,
-        pixelIcon->{
-          title,
-          svg
-        },
-        "uploadedIcon": uploadedIcon.asset->url
-      }
-    }`;
-
-  const siteSettings: SiteSettings = await client.fetch(query);
+  const { data: siteSettings } = await sanityFetch({
+    query: siteSettingsQuery,
+    stega: false,
+  });
+  const isDraftMode = (await draftMode()).isEnabled;
 
   return (
     <html lang="en">
-      <body className={`${bowlby.variable} ${roboto.variable}`}>
+      <body className={`${bowlby.variable} ${roboto.variable} bg-black`}>
         <Header nav={siteSettings.navigation} />
-        <main className="relative bg-black mt-[calc(var(--header-height)*-1)] min-h-screen p-6">
-          {children}
-        </main>
+        <main>{children}</main>
         <PageTransitionFooter />
+        <SanityLive />
+        {isDraftMode ? <VisualEditing /> : null}
       </body>
     </html>
   );

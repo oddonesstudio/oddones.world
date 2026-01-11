@@ -20,10 +20,24 @@ export default defineType({
       },
     }),
     defineField({
+      name: "isPrivate",
+      title: "Private",
+      type: "boolean",
+      initialValue: false,
+      description: "Require a password to view this article",
+    }),
+    defineField({
+      name: "primaryCTA",
+      title: "Primary CTA",
+      type: "reference",
+      to: [{ type: "button" }],
+    }),
+    defineField({
       name: "author",
       title: "Author",
       type: "reference",
       to: [{ type: "author" }],
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "categories",
@@ -49,8 +63,8 @@ export default defineType({
       options: { hotspot: true },
     }),
     defineField({
-      name: "backgroundColor",
-      title: "Background Colour",
+      name: "backgroundPalette",
+      title: "Background Palette",
       type: "string",
       options: {
         list: [
@@ -62,12 +76,13 @@ export default defineType({
       },
       initialValue: "vibrant",
       description: "Choose which palette colour to use as the background for this article",
+      hidden: ({ document }: any) => !document?.coverImage,
     }),
     defineField({
       name: "body",
       title: "Body",
       type: "array",
-      of: [{ type: "block" }, { type: "image" }],
+      of: [{ type: "block" }, { type: "image" }, { type: "accordion" }],
     }),
     defineField({
       name: "puzzle",
@@ -75,6 +90,12 @@ export default defineType({
       type: "reference",
       to: [{ type: "pixel" }],
       options: { disableNew: false },
+    }),
+    defineField({
+      name: "tagGroupSections",
+      title: "Tag Group Sections",
+      type: "array",
+      of: [{ type: "tagGroupSection" }],
     }),
     defineField({
       name: "seo",

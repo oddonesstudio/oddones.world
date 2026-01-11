@@ -1,4 +1,4 @@
-import { client } from "./client";
+import { sanityFetch } from "./live";
 
 interface MetadataProps {
   slug?: string;
@@ -33,7 +33,11 @@ export async function getMetadata({ slug }: MetadataProps = {}) {
     }
   }`;
 
-  const { content, global } = await client.fetch(query, { slug });
+  const { data } = await sanityFetch({ query, params: { slug }, stega: false });
+  const { content, global } = data as {
+    content?: Record<string, any> | null;
+    global?: Record<string, any> | null;
+  };
 
   // Priorities:
   // 1. Content-level SEO

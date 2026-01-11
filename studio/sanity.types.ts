@@ -60,36 +60,47 @@ export type Article = {
     _type: "image";
   };
   backgroundColor?: "dominant" | "vibrant" | "muted";
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
+  body?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?:
+          | "normal"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "blockquote";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  >;
   icon?: {
     _ref: string;
     _type: "reference";
@@ -377,5 +388,202 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Category | Article | Author | SiteSettings | SeoSettings | Page | Seo | Pixel | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes =
+  | Category
+  | Article
+  | Author
+  | SiteSettings
+  | SeoSettings
+  | Page
+  | Seo
+  | Pixel
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | SanityImageHotspot
+  | SanityImageCrop
+  | SanityFileAsset
+  | SanityImageAsset
+  | SanityImageMetadata
+  | Geopoint
+  | Slug
+  | SanityAssetSourceData;
+
 export declare const internalGroqTypeReferenceTo: unique symbol;
+
+// Source: queries/article.ts
+// Variable: articleQuery
+// Query: *[_type == "article" && slug.current == $slug][0]{      title,      author->{        name,        avatar {          asset->{            url          }        },        bio,      },      body,      primaryCta->{        label,          type,      },      coverImage {        asset->{          url,          metadata {            palette {              dominant {                background,                foreground,                population,              },              vibrant {                background,                foreground              },              muted {                background,                foreground              }            },            blurHash          }        }      },      backgroundPalette,      "palettes": {        "dominant": coverImage.asset->metadata.palette.dominant,        "vibrant": coverImage.asset->metadata.palette.vibrant,        "muted": coverImage.asset->metadata.palette.muted      },      isPrivate,      puzzle->{        title,        svg,        json      },      excerpt,      "pixel": icon->svg,      tagGroupSections[]{        heading,        groups[]{          emoji,          tags        }      }    }
+export type ArticleQueryResult = {
+  title: string | null;
+  author: {
+    name: string | null;
+    avatar: {
+      asset: {
+        url: string | null;
+      } | null;
+    } | null;
+    bio: string | null;
+  } | null;
+  body: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?:
+          | "blockquote"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  > | null;
+  primaryCta: null;
+  coverImage: {
+    asset: {
+      url: string | null;
+      metadata: {
+        palette: {
+          dominant: {
+            background: string | null;
+            foreground: string | null;
+            population: number | null;
+          } | null;
+          vibrant: {
+            background: string | null;
+            foreground: string | null;
+          } | null;
+          muted: {
+            background: string | null;
+            foreground: string | null;
+          } | null;
+        } | null;
+        blurHash: string | null;
+      } | null;
+    } | null;
+  } | null;
+  backgroundPalette: null;
+  palettes: {
+    dominant: SanityImagePaletteSwatch | null;
+    vibrant: SanityImagePaletteSwatch | null;
+    muted: SanityImagePaletteSwatch | null;
+  };
+  isPrivate: null;
+  puzzle: null;
+  excerpt: string | null;
+  pixel: string | null;
+  tagGroupSections: null;
+} | null;
+
+// Source: queries/homePage.ts
+// Variable: homePageQuery
+// Query: *[_type == "page" && slug.current == "/"][0]{  heading,  intro,  "themeColor": {    "h": coalesce(themeColor.hsl.h, 200),    "s": coalesce(themeColor.hsl.s * 100, 100),    "l": coalesce(themeColor.hsl.l * 100, 50)  },  pixelPuzzle->{    title,    svg,    json  },  "articles": *[_type == "article" && references(^._id)]{    _key,    "slug": slug.current,    title,    excerpt,    coverImage {      asset->{        url,        metadata {          palette {            dominant { background, foreground, population },            vibrant { background, foreground },            muted { background, foreground }          },          blurHash        }      }    }  }}
+export type HomePageQueryResult = {
+  heading: string | null;
+  intro: string | null;
+  themeColor: {
+    h: 200;
+    s: 100;
+    l: 50;
+  };
+  pixelPuzzle: {
+    title: string | null;
+    svg: string | null;
+    json: string | null;
+  } | null;
+  articles: Array<{
+    _key: null;
+    slug: string | null;
+    title: string | null;
+    excerpt: string | null;
+    coverImage: {
+      asset: {
+        url: string | null;
+        metadata: {
+          palette: {
+            dominant: {
+              background: string | null;
+              foreground: string | null;
+              population: number | null;
+            } | null;
+            vibrant: {
+              background: string | null;
+              foreground: string | null;
+            } | null;
+            muted: {
+              background: string | null;
+              foreground: string | null;
+            } | null;
+          } | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+  }>;
+} | null;
+
+// Source: queries/siteSettings.ts
+// Variable: siteSettingsQuery
+// Query: *[_type == "siteSettings"][0]{      navigation[] {        _key,        label,        "slug": page->slug.current,        iconType,        pixelIcon->{          title,          svg        },        "uploadedIcon": uploadedIcon.asset->url      },      footerText,      socialLinks[] {        platform,        url,        iconType,        pixelIcon->{          title,          svg        },        "uploadedIcon": uploadedIcon.asset->url      }    }
+export type SiteSettingsQueryResult = {
+  navigation: Array<{
+    _key: string;
+    label: string | null;
+    slug: string | null;
+    iconType: "image" | "pixel" | null;
+    pixelIcon: {
+      title: string | null;
+      svg: string | null;
+    } | null;
+    uploadedIcon: string | null;
+  }> | null;
+  footerText: string | null;
+  socialLinks: Array<{
+    platform: string | null;
+    url: string | null;
+    iconType: "image" | "pixel" | null;
+    pixelIcon: {
+      title: string | null;
+      svg: string | null;
+    } | null;
+    uploadedIcon: string | null;
+  }> | null;
+} | null;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+  interface SanityQueries {
+    '\n    *[_type == "article" && slug.current == $slug][0]{\n      title,\n      author->{\n        name,\n        avatar {\n          asset->{\n            url\n          }\n        },\n        bio,\n      },\n      body,\n      primaryCta->{\n        label,  \n        type,\n      },\n      coverImage {\n        asset->{\n          url,\n          metadata {\n            palette {\n              dominant {\n                background,\n                foreground,\n                population,\n              },\n              vibrant {\n                background,\n                foreground\n              },\n              muted {\n                background,\n                foreground\n              }\n            },\n            blurHash\n          }\n        }\n      },\n      backgroundPalette,\n      "palettes": {\n        "dominant": coverImage.asset->metadata.palette.dominant,\n        "vibrant": coverImage.asset->metadata.palette.vibrant,\n        "muted": coverImage.asset->metadata.palette.muted\n      },\n      isPrivate,\n      puzzle->{\n        title,\n        svg,\n        json\n      },\n      excerpt,\n      "pixel": icon->svg,\n      tagGroupSections[]{\n        heading,\n        groups[]{\n          emoji,\n          tags\n        }\n      }\n    }\n  ': ArticleQueryResult;
+    '*[_type == "page" && slug.current == "/"][0]{\n  heading,\n  intro,\n  "themeColor": {\n    "h": coalesce(themeColor.hsl.h, 200),\n    "s": coalesce(themeColor.hsl.s * 100, 100),\n    "l": coalesce(themeColor.hsl.l * 100, 50)\n  },\n  pixelPuzzle->{\n    title,\n    svg,\n    json\n  },\n  "articles": *[_type == "article" && references(^._id)]{\n    _key,\n    "slug": slug.current,\n    title,\n    excerpt,\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    }\n  }\n}\n': HomePageQueryResult;
+    '*[_type == "siteSettings"][0]{\n      navigation[] {\n        _key,\n        label,\n        "slug": page->slug.current,\n        iconType,\n        pixelIcon->{\n          title,\n          svg\n        },\n        "uploadedIcon": uploadedIcon.asset->url\n      },\n      footerText,\n      socialLinks[] {\n        platform,\n        url,\n        iconType,\n        pixelIcon->{\n          title,\n          svg\n        },\n        "uploadedIcon": uploadedIcon.asset->url\n      }\n    }': SiteSettingsQueryResult;
+  }
+}
