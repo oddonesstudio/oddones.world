@@ -32,7 +32,7 @@ const AREA_VARIANTS: Record<AreaName, "one" | "two" | "three" | "four" | "five">
 export const ArticleGrid = ({ articles }: ArticleGridProps) => {
   return (
     <div className="mx-auto w-full px-20 lg:px-container-lg bg-white py-20 rounded-2xl shadow-lg flex flex-col gap-20">
-      <h2 className="text-4xl font-heading mb-6 uppercase text-foreground">Featured Articles</h2>
+      <h2 className="text-4xl font-heading mb-6 uppercase text-black">Featured Articles</h2>
       <div
         className="grid gap-4 grid-cols-7 auto-rows-[200px] lg:auto-rows-[240px]"
         style={{ gridTemplateAreas: AREA_TEMPLATE } as CSSProperties}

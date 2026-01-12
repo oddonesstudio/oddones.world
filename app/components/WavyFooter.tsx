@@ -12,8 +12,8 @@ interface WavyFooterProps {
 export const WavyFooter = ({ pathname }: WavyFooterProps) => {
   const { scrollYProgress } = useScroll();
   const translateX = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
-  const scrollHeight = useTransform(scrollYProgress, [0.5, 1], ["0%", "50%"]);
-  const height = useMotionValue("0%");
+  const scrollScale = useTransform(scrollYProgress, [0.5, 1], [0, 0.5]);
+  const scaleY = useMotionValue(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [canScroll, setCanScroll] = useState(false);
 
@@ -44,37 +44,37 @@ export const WavyFooter = ({ pathname }: WavyFooterProps) => {
   useEffect(() => {
     if (isTransitioning || !canScroll) return;
 
-    height.set(scrollHeight.get());
-    const unsubscribe = scrollHeight.on("change", (value) => height.set(value));
+    scaleY.set(scrollScale.get());
+    const unsubscribe = scrollScale.on("change", (value) => scaleY.set(value));
     return () => unsubscribe();
-  }, [canScroll, height, isTransitioning, scrollHeight]);
+  }, [canScroll, isTransitioning, scaleY, scrollScale]);
 
   useEffect(() => {
     if (!canScroll && !isTransitioning) {
-      height.set("0%");
+      scaleY.set(0);
     }
-  }, [canScroll, height, isTransitioning]);
+  }, [canScroll, isTransitioning, scaleY]);
 
   useEffect(() => {
     setIsTransitioning(true);
-    height.set("200%");
+    scaleY.set(2);
 
-    const controls = animate(height, "0%", {
+    const controls = animate(scaleY, 0, {
       duration: 1,
       delay: 1,
       ease: "easeInOut",
       onComplete: () => {
         setIsTransitioning(false);
         if (canScroll) {
-          height.set(scrollHeight.get());
+          scaleY.set(scrollScale.get());
         } else {
-          height.set("0%");
+          scaleY.set(0);
         }
       },
     });
 
     return () => controls.stop();
-  }, [canScroll, height, scrollHeight]);
+  }, [canScroll, scaleY, scrollScale]);
 
   return (
     <footer className="pointer-events-none fixed inset-0 z-40 overflow-hidden">
@@ -88,10 +88,10 @@ export const WavyFooter = ({ pathname }: WavyFooterProps) => {
         y="0px"
         viewBox="0 0 2048 44.4"
         preserveAspectRatio="none"
-        style={{ translateX, height }}
-        className="absolute bottom-0 left-0 w-[200%]"
-        initial={{ height: "200%" }}
-        animate={{ height: "0%" }}
+        style={{ translateX, scaleY, transformOrigin: "bottom", willChange: "transform" }}
+        className="absolute bottom-0 left-0 h-full w-[200%]"
+        initial={{ scaleY: 2 }}
+        animate={{ scaleY: 0 }}
         transition={{ delay: 1, duration: 1, ease: "easeInOut" }}
       >
         <title>Wavy Footer</title>
