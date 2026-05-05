@@ -3,7 +3,6 @@ node_modules/
 
 # bun
 .bun
-bun.lock
 
 # testing
 coverage/
