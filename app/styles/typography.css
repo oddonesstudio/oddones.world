@@ -1,0 +1,63 @@
+/* H1 */
+@utility text-display-xl {
+  font-family: var(--font-bowlby);
+  font-size: clamp(6rem, 4.667rem + 5.926vw, 10rem);
+  line-height: 85%;
+  text-transform: uppercase;
+}
+
+@utility text-heading-xl {
+  font-family: var(--font-sans);
+  font-size: clamp(1.75rem, 1.167rem + 2.593vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* H2 */
+@utility text-heading-lg {
+  font-family: var(--font-sans);
+  font-size: clamp(1.75rem, 1.5rem + 1.111vw, 2.5rem);
+  font-weight: 300;
+}
+
+/* H3 */
+@utility text-heading-md {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+/* BODY */
+@utility text-body-lg {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 0.833rem + 0.741vw, 1.5rem);
+}
+
+@utility text-body-md {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 0.958rem + 0.185vw, 1.125rem);
+  font-weight: 300;
+}
+
+@utility text-body-sm {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+}
+
+/* LABEL */
+@utility text-label-md {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 0.958rem + 0.185vw, 1.125rem);
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+@utility text-label-sm {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  text-transform: uppercase;
+}

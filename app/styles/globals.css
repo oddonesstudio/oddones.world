@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@import "./typography.css";
+
+:root {
+  --font-heading: var(--font-bowlby);
+  --font-sans: var(--font-sans);
+
+  --page-dark: #1b1b1b;
+  --foreground-contrast: #000;
+  --page-background: #f9ece4;
+  --page-foreground: #131313;
+
+  --header-height: clamp(5rem, 3.333rem + 7.407vw, 10rem);
+  --footer-height: 50vh;
+
+  --left-right: clamp(1rem, -0.333rem + 5.926vw, 5rem);
+  --top-bottom: clamp(3rem, 2.333rem + 2.963vw, 5rem);
+  --editorial: clamp(1.25rem, -1.667rem + 12.963vw, 10rem);
+}
+
+@theme inline {
+  --max-w-page: 80ch;
+
+  --color-page-background: var(--page-background);
+  --color-page-foreground: var(--page-foreground);
+
+  --spacing-left-right: var(--left-right);
+  --spacing-top-bottom: var(--top-bottom);
+  --spacing-editorial: var(--editorial);
+
+  --spacing-header: var(--header-height);
+  --spacing-footer: var(--footer-height);
+}
+
+html {
+  overscroll-behavior: none;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+.scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+@utility shadow-custom {
+  box-shadow: 8px 8px 0 black;
+}
