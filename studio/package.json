@@ -5,17 +5,19 @@
   "main": "package.json",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "sanity dev",
-    "start": "sanity start",
-    "build": "sanity build",
-    "deploy": "sanity deploy",
-    "typegen": "bunx sanity@latest typegen generate"
+    "dev": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity dev",
+    "start": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity start",
+    "build": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity build",
+    "deploy": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity deploy",
+    "sanity:extract": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity schema extract --path ./schema.json",
+    "sanity:typegen": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity typegen generate",
+    "sanity:types": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity schema extract --path ./schema.json && NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity typegen generate"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
-    "@sanity/cli": "^3",
+    "@sanity/cli": "^3.99.0",
     "@sanity/color-input": "^5.0.2",
     "@sanity/vision": "^3",
     "react": "^19.1",
