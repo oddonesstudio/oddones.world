@@ -6,7 +6,7 @@
     "dev": "NODE_OPTIONS=--localstorage-file=$PWD/studio/.sanity/localstorage bunx next dev",
     "build": "bun run sanity:types && NODE_OPTIONS=--localstorage-file=$PWD/studio/.sanity/localstorage bunx next build",
     "start": "NODE_OPTIONS=--localstorage-file=$PWD/studio/.sanity/localstorage bunx next start",
-    "sanity:types": "bun run --cwd studio sanity:types",
+    "sanity:types": "bun install --cwd studio --frozen-lockfile && bun run --cwd studio sanity:types",
     "sb:dev": "storybook dev -p 6006",
     "sb:build": "storybook build"
   },
