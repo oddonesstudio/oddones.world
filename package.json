@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS=--localstorage-file=$PWD/studio/.sanity/localstorage bunx next dev",
-    "build": "bun run sanity:types && NODE_OPTIONS=--localstorage-file=$PWD/studio/.sanity/localstorage bunx next build",
-    "start": "NODE_OPTIONS=--localstorage-file=$PWD/studio/.sanity/localstorage bunx next start",
+    "dev": "node --localstorage-file=$PWD/studio/.sanity/localstorage ./node_modules/next/dist/bin/next dev",
+    "build": "bun run sanity:types && node --localstorage-file=$PWD/studio/.sanity/localstorage ./node_modules/next/dist/bin/next build",
+    "start": "node --localstorage-file=$PWD/studio/.sanity/localstorage ./node_modules/next/dist/bin/next start",
     "sanity:types": "bun install --cwd studio --frozen-lockfile && bun run --cwd studio sanity:types",
     "sb:dev": "storybook dev -p 6006",
     "sb:build": "storybook build"

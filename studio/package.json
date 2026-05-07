@@ -5,13 +5,13 @@
   "main": "package.json",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity dev",
-    "start": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity start",
-    "build": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity build",
-    "deploy": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage sanity deploy",
-    "sanity:extract": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity schema extract --path ./schema.json",
-    "sanity:typegen": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity typegen generate",
-    "sanity:types": "NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity schema extract --path ./schema.json && NODE_OPTIONS=--localstorage-file=$PWD/.sanity/localstorage XDG_CONFIG_HOME=$PWD/.sanity/config sanity typegen generate"
+    "dev": "node --localstorage-file=$PWD/.sanity/localstorage --max-http-header-size=65536 ./node_modules/@sanity/cli/bin/run.js dev",
+    "start": "node --localstorage-file=$PWD/.sanity/localstorage --max-http-header-size=65536 ./node_modules/@sanity/cli/bin/run.js start",
+    "build": "node --localstorage-file=$PWD/.sanity/localstorage ./node_modules/@sanity/cli/bin/run.js build",
+    "deploy": "node --localstorage-file=$PWD/.sanity/localstorage ./node_modules/@sanity/cli/bin/run.js deploy",
+    "sanity:extract": "XDG_CONFIG_HOME=$PWD/.sanity/config node --localstorage-file=$PWD/.sanity/localstorage ./node_modules/@sanity/cli/bin/run.js schema extract --path ./schema.json",
+    "sanity:typegen": "XDG_CONFIG_HOME=$PWD/.sanity/config node --localstorage-file=$PWD/.sanity/localstorage ./node_modules/@sanity/cli/bin/run.js typegen generate",
+    "sanity:types": "XDG_CONFIG_HOME=$PWD/.sanity/config node --localstorage-file=$PWD/.sanity/localstorage ./node_modules/@sanity/cli/bin/run.js schema extract --path ./schema.json && XDG_CONFIG_HOME=$PWD/.sanity/config node --localstorage-file=$PWD/.sanity/localstorage ./node_modules/@sanity/cli/bin/run.js typegen generate"
   },
   "keywords": [
     "sanity"
