@@ -9,3 +9,13 @@ Run `bun run sanity:types` from the repository root after changing `studio/schem
 ### Planned optimisations
 
 - Refactor local modal/gate state into a custom hook with `useReducer` for clearer state transitions and maintainability.
+
+bun outdated v1.2.23 (cf136713)
+[0.11ms] ".env.local", ".env"
+┌───────────────────┬──────────┬──────────┬────────┐
+│ Package           │ Current  │ Update   │ Latest │
+├───────────────────┼──────────┼──────────┼────────┤
+│ @types/node (dev) │ 20.19.39 │ 20.19.39 │ 25.6.0 │
+├───────────────────┼──────────┼──────────┼────────┤
+│ typescript (dev)  │ 5.9.3    │ 5.9.3    │ 6.0.3  │
+└───────────────────┴──────────┴──────────┴────────┘
