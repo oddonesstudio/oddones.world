@@ -2,32 +2,34 @@ import { Suspense } from "react";
 
 import { getArticlePageData } from "@/app/article/getArticlePageData";
 import { ArticleLoadingFallback } from "@/app/components/ArticleLoadingFallback";
-import { PageWrapper } from "@/app/components/PageWrapper";
 import { getArticleTextLayoutId } from "@/app/constants/motion";
 import { ArticleLayout } from "@/app/layouts/ArticleLayout";
 import { getArticleUnlockStorageKey } from "@/app/utils/puzzle";
 
-import { ArticleGateShell } from "./ArticleGateShell";
+import { Modal } from "./modal";
 
-export const dynamic = "force-dynamic";
-
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticleModal({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   return (
-    <PageWrapper slug={slug}>
-      <Suspense fallback={<ArticleLoadingFallback />}>
-        <ArticleContent slug={slug} />
-      </Suspense>
-    </PageWrapper>
+    <Suspense
+      fallback={
+        <Modal slug={slug}>
+          <ArticleLoadingFallback className="min-h-full" variant="modal" />
+        </Modal>
+      }
+    >
+      <ArticleModalContent slug={slug} />
+    </Suspense>
   );
 }
 
-async function ArticleContent({ slug }: { slug: string }) {
+async function ArticleModalContent({ slug }: { slug: string }) {
   const article = await getArticlePageData(slug);
 
   return (
-    <ArticleGateShell
+    <Modal
+      slug={slug}
       gate={
         article.isPrivate
           ? {
@@ -50,11 +52,12 @@ async function ArticleContent({ slug }: { slug: string }) {
         excerpt={article.excerpt}
         category={article.category}
         pixel={article.pixel}
-        tagSections={article.tagSections ?? undefined}
-        contentSections={article.contentSections ?? undefined}
+        tagSections={article.tagSections ?? []}
+        contentSections={article.contentSections ?? []}
+        modalPreview
         primaryCTA={article.primaryCTA}
         secondaryCTA={article.secondaryCTA}
       />
-    </ArticleGateShell>
+    </Modal>
   );
 }

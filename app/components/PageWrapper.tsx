@@ -1,22 +1,19 @@
 "use client";
 
+import { motion } from "motion/react";
+
 import type { PropsWithChildren } from "react";
 
-import ThemeScope from "./ThemeScope";
-import ThemeStorage from "./ThemeStorage";
-import type { HSL } from "./themeUtils";
+import { getArticleShellLayoutId } from "../constants/motion";
 
 interface PageWrapperProps extends PropsWithChildren {
-  scopedTheme?: HSL | null;
-  useStoredTheme?: boolean;
+  slug: string;
 }
 
-export const PageWrapper = ({ children, scopedTheme, useStoredTheme = true }: PageWrapperProps) => {
+export const PageWrapper = ({ children, slug }: PageWrapperProps) => {
   return (
-    <section className="flex flex-col gap-10 pb-(--footer-height) min-h-screen bg-background p-4">
+    <motion.section layoutId={getArticleShellLayoutId(slug)} data-component="Page Wrapper">
       {children}
-      {scopedTheme ? <ThemeScope theme={scopedTheme} /> : null}
-      <ThemeStorage enabled={useStoredTheme && !scopedTheme} />
-    </section>
+    </motion.section>
   );
 };
