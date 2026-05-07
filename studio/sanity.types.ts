@@ -12,6 +12,8 @@
  * ---------------------------------------------------------------------------------
  */
 
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
 // Source: schema.json
 export type TagSections = {
   _id: string;
@@ -20,9 +22,11 @@ export type TagSections = {
   _updatedAt: string;
   _rev: string;
   heading?: string;
-  tagGroups?: Array<{
-    _key: string;
-  } & TagGroups>;
+  tagGroups?: Array<
+    {
+      _key: string;
+    } & TagGroups
+  >;
 };
 
 export type TagGroups = {
@@ -41,6 +45,27 @@ export type SocialLink = {
   url?: string;
 };
 
+export type PageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "page";
+};
+
+export type ArticleReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "article";
+};
+
+export type ButtonReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "button";
+};
+
 export type SiteSettings = {
   _id: string;
   _type: "siteSettings";
@@ -50,27 +75,12 @@ export type SiteSettings = {
   navigation?: Array<{
     label?: string;
     linkType?: "page" | "article";
-    page?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "page";
-    };
-    article?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "article";
-    };
+    page?: PageReference;
+    article?: ArticleReference;
     _type: "navLink";
     _key: string;
   }>;
-  headerCTA?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "button";
-  };
+  headerCTA?: ButtonReference;
   errorFallback?: {
     title?: string;
     description?: string;
@@ -78,8 +88,18 @@ export type SiteSettings = {
   };
   copyright?: string;
   socialLinks?: Array<{
+    name?: "linkedin" | "github" | "email";
+    url?: string;
+    _type: "socialLink";
     _key: string;
-  } & SocialLink>;
+  }>;
+};
+
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
 export type SeoSettings = {
@@ -91,12 +111,7 @@ export type SeoSettings = {
   defaultTitle?: string;
   defaultDescription?: string;
   defaultOgImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -129,12 +144,7 @@ export type Seo = {
   keywords?: Array<string>;
   canonicalUrl?: string;
   ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -142,36 +152,41 @@ export type Seo = {
   };
 };
 
-export type Body = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
-  listItem?: "bullet" | "tag";
-  markDefs?: Array<{
-    href?: string;
-    _type: "link";
-    _key: string;
-  }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-} | {
-  asset?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-  };
-  media?: unknown;
-  hotspot?: SanityImageHotspot;
-  crop?: SanityImageCrop;
-  _type: "image";
-  _key: string;
-}>;
+export type Body = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+      listItem?: "bullet" | "tag";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      _key: string;
+    }
+>;
+
+export type PixelReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "pixel";
+};
 
 export type Page = {
   _id: string;
@@ -183,30 +198,10 @@ export type Page = {
   slug?: Slug;
   themeColor?: Color;
   intro?: string;
-  primaryCTA?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "button";
-  };
-  secondaryCTA?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "button";
-  };
-  pixelPuzzle?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "pixel";
-  };
-  featuredArticle?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "article";
-  };
+  primaryCTA?: ButtonReference;
+  secondaryCTA?: ButtonReference;
+  pixelPuzzle?: PixelReference;
+  featuredArticle?: ArticleReference;
   seo?: Seo;
 };
 
@@ -236,6 +231,34 @@ export type Category = {
   description?: string;
 };
 
+export type AuthorReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "author";
+};
+
+export type CategoryReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "category";
+};
+
+export type TagSectionsReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "tagSections";
+};
+
+export type AccordionReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "accordion";
+};
+
 export type Article = {
   _id: string;
   _type: "article";
@@ -246,96 +269,63 @@ export type Article = {
   slug?: Slug;
   isPrivate?: boolean;
   gateTitle?: string;
-  primaryCTA?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "button";
-  };
-  secondaryCTA?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "button";
-  };
-  author?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "author";
-  };
-  categories?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "category";
-  }>;
+  primaryCTA?: ButtonReference;
+  secondaryCTA?: ButtonReference;
+  author?: AuthorReference;
+  categories?: Array<
+    {
+      _key: string;
+    } & CategoryReference
+  >;
   publishedAt?: string;
   excerpt?: string;
   coverImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
   };
   backgroundPalette?: "dominant" | "vibrant" | "muted";
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
+  body?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  >;
+  pixelPuzzle?: PixelReference;
+  tagSections?: Array<
+    {
       _key: string;
-    }>;
-    style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
-    listItem?: "bullet" | "tag";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
+    } & TagSectionsReference
+  >;
+  contentSections?: Array<
+    {
       _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  pixelPuzzle?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "pixel";
-  };
-  tagSections?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tagSections";
-  }>;
-  contentSections?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "accordion";
-  }>;
+    } & AccordionReference
+  >;
   seo?: Seo;
 };
 
@@ -349,12 +339,7 @@ export type Pixel = {
   artwork?: string;
   json?: string;
   svg?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -370,51 +355,47 @@ export type Author = {
   _rev: string;
   name?: string;
   slug?: Slug;
-  bio?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
-    listItem?: "bullet" | "tag";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
+  bio?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  >;
   avatar?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
   };
   socialLinks?: Array<{
+    name?: "linkedin" | "github" | "email";
+    url?: string;
+    _type: "socialLink";
     _key: string;
-  } & SocialLink>;
+  }>;
 };
 
 export type Button = {
@@ -438,12 +419,7 @@ export type AccordionItem = {
   _type: "accordionItem";
   title?: string;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -476,39 +452,39 @@ export type Accordion = {
   _updatedAt: string;
   _rev: string;
   heading?: string;
-  summaryText?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
+  summaryText?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  >;
+  items?: Array<
+    {
       _key: string;
-    }>;
-    style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
-    listItem?: "bullet" | "tag";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  items?: Array<{
-    _key: string;
-  } & AccordionItem>;
+    } & AccordionItem
+  >;
 };
 
 export type MediaTag = {
@@ -577,6 +553,7 @@ export type SanityImageMetadata = {
   palette?: SanityImagePalette;
   lqip?: string;
   blurHash?: string;
+  thumbHash?: string;
   hasAlpha?: boolean;
   isOpaque?: boolean;
 };
@@ -640,9 +617,49 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = TagSections | TagGroups | SocialLink | SiteSettings | SeoSettings | SanityImageCrop | SanityImageHotspot | Seo | Body | Page | Color | Slug | Category | Article | Pixel | Author | Button | AccordionItem | Accordion | MediaTag | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
-export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./queries/groq.ts
+export type AllSanitySchemaTypes =
+  | TagSections
+  | TagGroups
+  | SocialLink
+  | PageReference
+  | ArticleReference
+  | ButtonReference
+  | SiteSettings
+  | SanityImageAssetReference
+  | SeoSettings
+  | SanityImageCrop
+  | SanityImageHotspot
+  | Seo
+  | Body
+  | PixelReference
+  | Page
+  | Color
+  | Slug
+  | Category
+  | AuthorReference
+  | CategoryReference
+  | TagSectionsReference
+  | AccordionReference
+  | Article
+  | Pixel
+  | Author
+  | Button
+  | AccordionItem
+  | Accordion
+  | MediaTag
+  | RgbaColor
+  | HsvaColor
+  | HslaColor
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | SanityImageMetadata
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset
+  | Geopoint;
+
+// Source: queries/groq.ts
 // Variable: articleQuery
 // Query: *[_type == "article" && slug.current == $slug][0]{      title,      author->{        name,        avatar {          asset->{            url          }        },        bio,        socialLinks      },      body,      primaryCTA->{        label,        action,        linkType,        anchor,        externalURL,        contact,        download,        pageSlug,        articleSlug      },      secondaryCTA->{        label,        action,        linkType,        anchor,        externalURL,        contact,        download,        pageSlug,        articleSlug      },      coverImage {        asset->{          url,          metadata {            palette {              dominant { background, foreground, population },              vibrant { background, foreground },              muted { background, foreground }            },            blurHash          }        }      },      backgroundPalette,      "palettes": {        "dominant": coverImage.asset->metadata.palette.dominant,        "vibrant": coverImage.asset->metadata.palette.vibrant,        "muted": coverImage.asset->metadata.palette.muted      },      isPrivate,      gateTitle,      categories[]->{        title,        "slug": slug.current      },      pixelPuzzle->{        title,        artwork,        json,        "svg": svg.asset->url,      },      excerpt,      tagSections[]->{        _id,        heading,        tagGroups[]{          _key,          heading,          tags        }      },      contentSections[]->{        _id,        _type,        _type == "accordion" => {          heading,          summaryText,          items[]{            _key,            title,            image {              asset->{                url              }            },            content          }        },      }    }
 export type ArticleQueryResult = {
@@ -654,70 +671,69 @@ export type ArticleQueryResult = {
         url: string | null;
       } | null;
     } | null;
-    bio: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
-      listItem?: "bullet" | "tag";
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
+    bio: Array<
+      | {
+          children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: "span";
+            _key: string;
+          }>;
+          style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+          listItem?: "bullet" | "tag";
+          markDefs?: Array<{
+            href?: string;
+            _type: "link";
+            _key: string;
+          }>;
+          level?: number;
+          _type: "block";
+          _key: string;
+        }
+      | {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+          _key: string;
+        }
+    > | null;
+    socialLinks: Array<{
+      name?: "email" | "github" | "linkedin";
+      url?: string;
+      _type: "socialLink";
       _key: string;
     }> | null;
-    socialLinks: Array<{
-      _key: string;
-    } & SocialLink> | null;
   } | null;
-  body: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
-    listItem?: "bullet" | "tag";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }> | null;
+  body: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  > | null;
   primaryCTA: {
     label: string | null;
     action: "anchor" | "contact" | "download" | "external" | "internal" | null;
@@ -795,36 +811,34 @@ export type ArticleQueryResult = {
     _id: string;
     _type: "accordion";
     heading: string | null;
-    summaryText: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
-      listItem?: "bullet" | "tag";
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-      _key: string;
-    }> | null;
+    summaryText: Array<
+      | {
+          children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: "span";
+            _key: string;
+          }>;
+          style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+          listItem?: "bullet" | "tag";
+          markDefs?: Array<{
+            href?: string;
+            _type: "link";
+            _key: string;
+          }>;
+          level?: number;
+          _type: "block";
+          _key: string;
+        }
+      | {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+          _key: string;
+        }
+    > | null;
     items: Array<{
       _key: string;
       title: string | null;
@@ -840,7 +854,15 @@ export type ArticleQueryResult = {
           _type: "span";
           _key: string;
         }>;
-        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        style?:
+          | "blockquote"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "normal";
         listItem?: "bullet" | "number";
         markDefs?: Array<{
           href?: string;
@@ -854,6 +876,8 @@ export type ArticleQueryResult = {
     }> | null;
   }> | null;
 } | null;
+
+// Source: queries/groq.ts
 // Variable: homePageQuery
 // Query: *[_type == "page" && slug.current == "/"][0]{  heading,  intro,  primaryCTA->{    label,    action,    linkType,    anchor,    externalURL,    contact,    download,    pageSlug,    articleSlug  },  secondaryCTA->{    label,    action,    linkType,    anchor,    externalURL,    contact,    download,    pageSlug,    articleSlug  },  "themeColor": {    "h": coalesce(themeColor.hsl.h, 200),    "s": coalesce(themeColor.hsl.s * 100, 100),    "l": coalesce(themeColor.hsl.l * 100, 50)  },  pixelPuzzle->{    title,    artwork,    "svg": svg.asset->url,    json  },  "featuredArticle": *[_type == "article" && "featured" in categories[]->slug.current][0]{    "slug": slug.current,    title,    excerpt,    body,    isPrivate,    author->{      name,      avatar { asset->{ url } },      bio    },    coverImage {      asset->{        url,        metadata {          palette {            dominant { background, foreground, population },            vibrant { background, foreground },            muted { background, foreground }          },          blurHash        }      }    },    backgroundPalette,    "palettes": {      "dominant": coverImage.asset->metadata.palette.dominant,      "vibrant": coverImage.asset->metadata.palette.vibrant,      "muted": coverImage.asset->metadata.palette.muted    },    pixelPuzzle->{      title,      artwork,      json,      "svg": svg.asset->url    },  },  "articles": *[_type == "article" && "featured" in categories[]->slug.current] {    _key,    "slug": slug.current,    title,    excerpt,    author->{      name,      "avatar": avatar.asset->url,      bio    },    coverImage {      asset->{        url,        metadata {          palette {            dominant { background, foreground, population },            vibrant { background, foreground },            muted { background, foreground }          },          blurHash        }      }    }  }}
 export type HomePageQueryResult = {
@@ -896,36 +920,34 @@ export type HomePageQueryResult = {
     slug: string | null;
     title: string | null;
     excerpt: string | null;
-    body: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
-      listItem?: "bullet" | "tag";
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-      _key: string;
-    }> | null;
+    body: Array<
+      | {
+          children?: Array<{
+            marks?: Array<string>;
+            text?: string;
+            _type: "span";
+            _key: string;
+          }>;
+          style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+          listItem?: "bullet" | "tag";
+          markDefs?: Array<{
+            href?: string;
+            _type: "link";
+            _key: string;
+          }>;
+          level?: number;
+          _type: "block";
+          _key: string;
+        }
+      | {
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: "image";
+          _key: string;
+        }
+    > | null;
     isPrivate: boolean | null;
     author: {
       name: string | null;
@@ -934,36 +956,34 @@ export type HomePageQueryResult = {
           url: string | null;
         } | null;
       } | null;
-      bio: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
-        listItem?: "bullet" | "tag";
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        _key: string;
-      }> | null;
+      bio: Array<
+        | {
+            children?: Array<{
+              marks?: Array<string>;
+              text?: string;
+              _type: "span";
+              _key: string;
+            }>;
+            style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+            listItem?: "bullet" | "tag";
+            markDefs?: Array<{
+              href?: string;
+              _type: "link";
+              _key: string;
+            }>;
+            level?: number;
+            _type: "block";
+            _key: string;
+          }
+        | {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            _key: string;
+          }
+      > | null;
     } | null;
     coverImage: {
       asset: {
@@ -1009,36 +1029,34 @@ export type HomePageQueryResult = {
     author: {
       name: string | null;
       avatar: string | null;
-      bio: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
-        listItem?: "bullet" | "tag";
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      } | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        _key: string;
-      }> | null;
+      bio: Array<
+        | {
+            children?: Array<{
+              marks?: Array<string>;
+              text?: string;
+              _type: "span";
+              _key: string;
+            }>;
+            style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+            listItem?: "bullet" | "tag";
+            markDefs?: Array<{
+              href?: string;
+              _type: "link";
+              _key: string;
+            }>;
+            level?: number;
+            _type: "block";
+            _key: string;
+          }
+        | {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            _key: string;
+          }
+      > | null;
     } | null;
     coverImage: {
       asset: {
@@ -1065,6 +1083,8 @@ export type HomePageQueryResult = {
     } | null;
   }>;
 } | null;
+
+// Source: queries/groq.ts
 // Variable: siteSettingsQuery
 // Query: *[_type == "siteSettings"][0]{      navigation[] {        _key,        label,        linkType,        "slug": select(          linkType == "page" => page->slug.current,          linkType == "article" => "article/" + article->slug.current,          null        ),        "href": select(          linkType == "page" => page->slug.current,          linkType == "article" => "/article/" + article->slug.current,          null        )      },      headerCTA->{        label,        action,        linkType,        anchor,        externalURL,        contact,        download,        "slug": select(          linkType == "page" => pageSlug,          linkType == "article" => "article/" + articleSlug,          null        ),        "href": select(          linkType == "page" => pageSlug,          linkType == "article" => "/article/" + articleSlug,          null        ),        pageSlug,        articleSlug      },      errorFallback {        title,        description,        actionLabel      },      copyright,      socialLinks[] {        name,        url      }    }
 export type SiteSettingsQueryResult = {
@@ -1095,8 +1115,8 @@ export type SiteSettingsQueryResult = {
   } | null;
   copyright: string | null;
   socialLinks: Array<{
-    name: null;
-    url: null;
+    name: "email" | "github" | "linkedin" | null;
+    url: string | null;
   }> | null;
 } | null;
 
@@ -1104,8 +1124,8 @@ export type SiteSettingsQueryResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "\n    *[_type == \"article\" && slug.current == $slug][0]{\n      title,\n      author->{\n        name,\n        avatar {\n          asset->{\n            url\n          }\n        },\n        bio,\n        socialLinks\n      },\n      body,\n      primaryCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        pageSlug,\n        articleSlug\n      },\n      secondaryCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        pageSlug,\n        articleSlug\n      },\n      coverImage {\n        asset->{\n          url,\n          metadata {\n            palette {\n              dominant { background, foreground, population },\n              vibrant { background, foreground },\n              muted { background, foreground }\n            },\n            blurHash\n          }\n        }\n      },\n      backgroundPalette,\n      \"palettes\": {\n        \"dominant\": coverImage.asset->metadata.palette.dominant,\n        \"vibrant\": coverImage.asset->metadata.palette.vibrant,\n        \"muted\": coverImage.asset->metadata.palette.muted\n      },\n      isPrivate,\n      gateTitle,\n      categories[]->{\n        title,\n        \"slug\": slug.current\n      },\n      pixelPuzzle->{\n        title,\n        artwork,\n        json,\n        \"svg\": svg.asset->url,\n      },\n      excerpt,\n      tagSections[]->{\n        _id,\n        heading,\n        tagGroups[]{\n          _key,\n          heading,\n          tags\n        }\n      },\n      contentSections[]->{\n        _id,\n        _type,\n        _type == \"accordion\" => {\n          heading,\n          summaryText,\n          items[]{\n            _key,\n            title,\n            image {\n              asset->{\n                url\n              }\n            },\n            content\n          }\n        },\n      }\n    }\n  ": ArticleQueryResult;
-    "*[_type == \"page\" && slug.current == \"/\"][0]{\n  heading,\n  intro,\n  primaryCTA->{\n    label,\n    action,\n    linkType,\n    anchor,\n    externalURL,\n    contact,\n    download,\n    pageSlug,\n    articleSlug\n  },\n  secondaryCTA->{\n    label,\n    action,\n    linkType,\n    anchor,\n    externalURL,\n    contact,\n    download,\n    pageSlug,\n    articleSlug\n  },\n  \"themeColor\": {\n    \"h\": coalesce(themeColor.hsl.h, 200),\n    \"s\": coalesce(themeColor.hsl.s * 100, 100),\n    \"l\": coalesce(themeColor.hsl.l * 100, 50)\n  },\n  pixelPuzzle->{\n    title,\n    artwork,\n    \"svg\": svg.asset->url,\n    json\n  },\n  \"featuredArticle\": *[_type == \"article\" && \"featured\" in categories[]->slug.current][0]{\n    \"slug\": slug.current,\n    title,\n    excerpt,\n    body,\n    isPrivate,\n    author->{\n      name,\n      avatar { asset->{ url } },\n      bio\n    },\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    },\n    backgroundPalette,\n    \"palettes\": {\n      \"dominant\": coverImage.asset->metadata.palette.dominant,\n      \"vibrant\": coverImage.asset->metadata.palette.vibrant,\n      \"muted\": coverImage.asset->metadata.palette.muted\n    },\n    pixelPuzzle->{\n      title,\n      artwork,\n      json,\n      \"svg\": svg.asset->url\n    },\n  },\n  \"articles\": *[_type == \"article\" && \"featured\" in categories[]->slug.current] {\n    _key,\n    \"slug\": slug.current,\n    title,\n    excerpt,\n    author->{\n      name,\n      \"avatar\": avatar.asset->url,\n      bio\n    },\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    }\n  }\n}\n": HomePageQueryResult;
-    "*[_type == \"siteSettings\"][0]{\n      navigation[] {\n        _key,\n        label,\n        linkType,\n        \"slug\": select(\n          linkType == \"page\" => page->slug.current,\n          linkType == \"article\" => \"article/\" + article->slug.current,\n          null\n        ),\n        \"href\": select(\n          linkType == \"page\" => page->slug.current,\n          linkType == \"article\" => \"/article/\" + article->slug.current,\n          null\n        )\n      },\n      headerCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        \"slug\": select(\n          linkType == \"page\" => pageSlug,\n          linkType == \"article\" => \"article/\" + articleSlug,\n          null\n        ),\n        \"href\": select(\n          linkType == \"page\" => pageSlug,\n          linkType == \"article\" => \"/article/\" + articleSlug,\n          null\n        ),\n        pageSlug,\n        articleSlug\n      },\n      errorFallback {\n        title,\n        description,\n        actionLabel\n      },\n      copyright,\n      socialLinks[] {\n        name,\n        url\n      }\n    }": SiteSettingsQueryResult;
+    '\n    *[_type == "article" && slug.current == $slug][0]{\n      title,\n      author->{\n        name,\n        avatar {\n          asset->{\n            url\n          }\n        },\n        bio,\n        socialLinks\n      },\n      body,\n      primaryCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        pageSlug,\n        articleSlug\n      },\n      secondaryCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        pageSlug,\n        articleSlug\n      },\n      coverImage {\n        asset->{\n          url,\n          metadata {\n            palette {\n              dominant { background, foreground, population },\n              vibrant { background, foreground },\n              muted { background, foreground }\n            },\n            blurHash\n          }\n        }\n      },\n      backgroundPalette,\n      "palettes": {\n        "dominant": coverImage.asset->metadata.palette.dominant,\n        "vibrant": coverImage.asset->metadata.palette.vibrant,\n        "muted": coverImage.asset->metadata.palette.muted\n      },\n      isPrivate,\n      gateTitle,\n      categories[]->{\n        title,\n        "slug": slug.current\n      },\n      pixelPuzzle->{\n        title,\n        artwork,\n        json,\n        "svg": svg.asset->url,\n      },\n      excerpt,\n      tagSections[]->{\n        _id,\n        heading,\n        tagGroups[]{\n          _key,\n          heading,\n          tags\n        }\n      },\n      contentSections[]->{\n        _id,\n        _type,\n        _type == "accordion" => {\n          heading,\n          summaryText,\n          items[]{\n            _key,\n            title,\n            image {\n              asset->{\n                url\n              }\n            },\n            content\n          }\n        },\n      }\n    }\n  ': ArticleQueryResult;
+    '*[_type == "page" && slug.current == "/"][0]{\n  heading,\n  intro,\n  primaryCTA->{\n    label,\n    action,\n    linkType,\n    anchor,\n    externalURL,\n    contact,\n    download,\n    pageSlug,\n    articleSlug\n  },\n  secondaryCTA->{\n    label,\n    action,\n    linkType,\n    anchor,\n    externalURL,\n    contact,\n    download,\n    pageSlug,\n    articleSlug\n  },\n  "themeColor": {\n    "h": coalesce(themeColor.hsl.h, 200),\n    "s": coalesce(themeColor.hsl.s * 100, 100),\n    "l": coalesce(themeColor.hsl.l * 100, 50)\n  },\n  pixelPuzzle->{\n    title,\n    artwork,\n    "svg": svg.asset->url,\n    json\n  },\n  "featuredArticle": *[_type == "article" && "featured" in categories[]->slug.current][0]{\n    "slug": slug.current,\n    title,\n    excerpt,\n    body,\n    isPrivate,\n    author->{\n      name,\n      avatar { asset->{ url } },\n      bio\n    },\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    },\n    backgroundPalette,\n    "palettes": {\n      "dominant": coverImage.asset->metadata.palette.dominant,\n      "vibrant": coverImage.asset->metadata.palette.vibrant,\n      "muted": coverImage.asset->metadata.palette.muted\n    },\n    pixelPuzzle->{\n      title,\n      artwork,\n      json,\n      "svg": svg.asset->url\n    },\n  },\n  "articles": *[_type == "article" && "featured" in categories[]->slug.current] {\n    _key,\n    "slug": slug.current,\n    title,\n    excerpt,\n    author->{\n      name,\n      "avatar": avatar.asset->url,\n      bio\n    },\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    }\n  }\n}\n': HomePageQueryResult;
+    '*[_type == "siteSettings"][0]{\n      navigation[] {\n        _key,\n        label,\n        linkType,\n        "slug": select(\n          linkType == "page" => page->slug.current,\n          linkType == "article" => "article/" + article->slug.current,\n          null\n        ),\n        "href": select(\n          linkType == "page" => page->slug.current,\n          linkType == "article" => "/article/" + article->slug.current,\n          null\n        )\n      },\n      headerCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        "slug": select(\n          linkType == "page" => pageSlug,\n          linkType == "article" => "article/" + articleSlug,\n          null\n        ),\n        "href": select(\n          linkType == "page" => pageSlug,\n          linkType == "article" => "/article/" + articleSlug,\n          null\n        ),\n        pageSlug,\n        articleSlug\n      },\n      errorFallback {\n        title,\n        description,\n        actionLabel\n      },\n      copyright,\n      socialLinks[] {\n        name,\n        url\n      }\n    }': SiteSettingsQueryResult;
   }
 }
