@@ -6,7 +6,7 @@ import { Logo } from "../../_assets/Logo";
 
 const styles = tv({
   slots: {
-    base: "flex items-end h-header w-fit bg-black p-8 cursor-pointer",
+    base: "flex items-end h-header bg-black p-8 cursor-pointer max-md:aspect-square max-md:h-full",
   },
 });
 

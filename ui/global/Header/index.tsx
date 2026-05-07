@@ -2,7 +2,9 @@
 
 import type { Variants } from "framer-motion";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { Popover } from "radix-ui";
 import React from "react";
 
 import { useAppUi } from "@/app/components/AppUiContext";
@@ -13,13 +15,13 @@ import { cn, tv } from "@/ui/_lib/utils";
 import type { ButtonAction } from "@/ui/atoms/Button";
 import { LogoTab } from "@/ui/atoms/LogoTab";
 import { NavItem } from "@/ui/atoms/NavItem";
+import { Container } from "../Container";
 
 const styles = tv({
   slots: {
-    base: "pointer-events-none absolute left-0 w-full h-(--header-height) flex items-center justify-end",
-    logoTab: "pointer-events-auto fixed top-0 left-0 md:left-20 cursor-pointer",
-    nav: "group/nav flex gap-6",
-    // nav: "pointer-events-auto fixed top-0 right-8 md:right-20 flex h-(--header-height) items-center"
+    base: "pointer-events-none absolute left-0 w-full",
+    motionContainer: "pointer-events-auto md:fixed top-0 left-0 w-full flex",
+    nav: "hidden group/nav md:flex gap-6",
   },
 });
 
@@ -49,6 +51,7 @@ export const Header = (props: HeaderProps) => {
   const headerRef = React.useRef<HTMLElement>(null);
   const previousArticleModalScrollRef = React.useRef(0);
   const [hidden, setHidden] = React.useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
   const [pageScrolled, setPageScrolled] = React.useState(false);
   const [articleModalScrolled, setArticleModalScrolled] = React.useState(false);
 
@@ -99,7 +102,7 @@ export const Header = (props: HeaderProps) => {
     previousArticleModalScrollRef.current = scrollTop;
   }, [articleModal.scrollTop, articleModalExpanded]);
 
-  const { base, logoTab, nav } = styles();
+  const { base, motionContainer, nav } = styles();
   const headerClassName = base({
     className: articleModalExpanded ? "z-[70]" : articleModalOpen ? "z-30" : "z-50",
   });
@@ -111,25 +114,60 @@ export const Header = (props: HeaderProps) => {
     : pageScrolled
       ? "hidden"
       : "visible";
+  const handleMobileNavClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target instanceof Element && event.target.closest("a")) {
+      setMobileNavOpen(false);
+    }
+  };
 
   return (
     <header ref={headerRef} className={headerClassName} data-component="Header">
-      <motion.div className={logoTab()} animate={revealState} variants={headerRevealVariants}>
-        <LogoTab onHover={notifyLogoTabHover} />
-      </motion.div>
-
-      <motion.nav
-        className={nav()}
-        animate={navAnimationState}
-        variants={navRevealVariants}
-        style={{ pointerEvents: navAnimationState === "hidden" ? "none" : "auto" }}
+      <motion.div
+        className={motionContainer()}
+        animate={revealState}
+        variants={headerRevealVariants}
       >
-        <ul className={cn(nav(), isArticleRoute || articleModalExpanded ? "text-white" : "")}>
-          {props.nav?.map((item: Navigation[number]) => (
-            <NavItem key={item._key} {...item} />
-          ))}
-        </ul>
-      </motion.nav>
+        <Container className="flex justify-between items-center pt-0! pb-0">
+          <LogoTab onHover={notifyLogoTabHover} />
+          <motion.nav
+            className="relative"
+            animate={navAnimationState}
+            variants={navRevealVariants}
+            style={{ pointerEvents: navAnimationState === "hidden" ? "none" : "auto" }}
+          >
+            <Popover.Root open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+              <Popover.Trigger asChild>
+                <button
+                  className="inline-flex items-center justify-center p-3 text-page-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-page-foreground md:hidden"
+                  type="button"
+                  aria-label="Open navigation menu"
+                >
+                  <Menu aria-hidden="true" size={24} strokeWidth={2.5} />
+                </button>
+              </Popover.Trigger>
+              <Popover.Portal>
+                <Popover.Content
+                  align="end"
+                  sideOffset={10}
+                  className="z-[80] w-48 border-2 border-black bg-page-background px-4 py-3 text-page-foreground shadow-custom md:hidden"
+                  onClick={handleMobileNavClick}
+                >
+                  <ul className="flex flex-col gap-3 font-mono text-xs uppercase tracking-normal">
+                    {props.nav?.map((item: Navigation[number]) => (
+                      <NavItem key={item._key} {...item} />
+                    ))}
+                  </ul>
+                </Popover.Content>
+              </Popover.Portal>
+            </Popover.Root>
+            <ul className={cn(nav(), isArticleRoute || articleModalExpanded ? "text-white" : "")}>
+              {props.nav?.map((item: Navigation[number]) => (
+                <NavItem key={item._key} {...item} />
+              ))}
+            </ul>
+          </motion.nav>
+        </Container>
+      </motion.div>
     </header>
   );
 };
