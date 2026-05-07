@@ -1,6 +1,5 @@
+import { cn } from "@/ui/_lib/utils";
 import type { PropsWithChildren } from "react";
-
-import { cn } from "@/app/utils/cn";
 
 interface StackedSectionsProps extends PropsWithChildren {
   className?: string;
@@ -23,7 +22,10 @@ export const StackedSection = ({
   children,
 }: StackedSectionProps) => {
   return (
-    <section className={cn(sticky ? "sticky top-6" : "relative", className)} style={{ zIndex: index + 1 }}>
+    <section
+      className={cn(sticky ? "sticky top-6" : "relative", className)}
+      style={{ zIndex: index + 1 }}
+    >
       {children}
     </section>
   );
