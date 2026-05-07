@@ -1,4 +1,5 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, defineArrayMember } from "sanity";
+import richText from "../fields/richText";
 
 export default defineType({
   name: "article",
@@ -27,8 +28,20 @@ export default defineType({
       description: "Require a password to view this article",
     }),
     defineField({
+      name: "gateTitle",
+      title: "Gate Title",
+      type: "string",
+      description: "Title to display on the access gate for this article",
+    }),
+    defineField({
       name: "primaryCTA",
       title: "Primary CTA",
+      type: "reference",
+      to: [{ type: "button" }],
+    }),
+    defineField({
+      name: "secondaryCTA",
+      title: "Secondary CTA",
       type: "reference",
       to: [{ type: "button" }],
     }),
@@ -79,23 +92,34 @@ export default defineType({
       hidden: ({ document }: any) => !document?.coverImage,
     }),
     defineField({
+      ...richText,
       name: "body",
       title: "Body",
-      type: "array",
-      of: [{ type: "block" }, { type: "image" }, { type: "accordion" }],
     }),
     defineField({
-      name: "puzzle",
-      title: "Puzzle",
+      name: "pixelPuzzle",
+      title: "Pixel Puzzle",
       type: "reference",
       to: [{ type: "pixel" }],
       options: { disableNew: false },
     }),
     defineField({
-      name: "tagGroupSections",
-      title: "Tag Group Sections",
+      name: "tagSections",
+      title: "Tag Sections",
       type: "array",
-      of: [{ type: "tagGroupSection" }],
+      of: [{ type: "reference", to: [{ type: "tagSections" }] }],
+    }),
+    defineField({
+      name: "contentSections",
+      title: "Content Sections",
+      type: "array",
+      of: [
+        defineArrayMember({
+          name: "section",
+          type: "reference",
+          to: [{ type: "accordion" }],
+        }),
+      ],
     }),
     defineField({
       name: "seo",

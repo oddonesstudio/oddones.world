@@ -4,7 +4,7 @@ import { PixelCanvas } from "../../components/PixelCanvas";
 
 export default defineType({
   name: "pixel",
-  title: "Pixel",
+  title: "Pixel Art",
   type: "document",
   fields: [
     defineField({
@@ -14,9 +14,9 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "svg",
-      title: "SVG",
-      description: "Optional: draw pixel image.",
+      name: "artwork",
+      title: "Artwork",
+      description: "Draw pixel art",
       type: "text",
       components: {
         input: PixelCanvas,
@@ -25,8 +25,14 @@ export default defineType({
     defineField({
       name: "json",
       title: "JSON",
-      description: 'e.g. [["#000",0],[0,"#f00"]].',
+      description: 'e.g. [["#000",0],[0,"#f00"]]',
       type: "text",
+    }),
+    defineField({
+      name: "svg",
+      title: "SVG",
+      description: "Upload an SVG",
+      type: "image",
     }),
   ],
   preview: {

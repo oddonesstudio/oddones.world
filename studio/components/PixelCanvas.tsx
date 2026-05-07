@@ -7,10 +7,10 @@ import { set, unset } from "sanity";
 type PixelCanvasProps = {
   value?: string;
   onChange: (patch: ReturnType<typeof set> | ReturnType<typeof unset>) => void;
+  size?: number;
 };
 
-export const PixelCanvas: React.FC<PixelCanvasProps> = ({ value, onChange }) => {
-  const size = 16; // TODO: allow custom size
+export const PixelCanvas: React.FC<PixelCanvasProps> = ({ value, onChange, size = 16 }) => {
   const [pixels, setPixels] = useState<boolean[]>(Array(size * size).fill(false));
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const PixelCanvas: React.FC<PixelCanvasProps> = ({ value, onChange }) => 
       }
       setPixels(activePixels);
     }
-  }, [value]);
+  }, [value, size]);
 
   const togglePixel = useCallback((index: number) => {
     setPixels((prev) => {
@@ -52,9 +52,11 @@ export const PixelCanvas: React.FC<PixelCanvasProps> = ({ value, onChange }) => 
         console.warn("Skipping patch (read-only mode):", err);
       }
     }
-  }, [pixels, onChange]);
+  }, [pixels, onChange, size]);
 
-  const handleClear = () => setPixels(Array(size * size).fill(false));
+  const handleClear = useCallback(() => {
+    setPixels(Array(size * size).fill(false));
+  }, [size]);
 
   return (
     <div style={{ userSelect: "none" }}>

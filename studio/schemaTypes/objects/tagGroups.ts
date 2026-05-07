@@ -1,8 +1,8 @@
 import { defineField, defineType } from "sanity";
 
 export default defineType({
-  name: "tagGroupSection",
-  title: "Tag Group Section",
+  name: "tagGroups",
+  title: "Tag Groups",
   type: "object",
   fields: [
     defineField({
@@ -11,10 +11,11 @@ export default defineType({
       type: "string",
     }),
     defineField({
-      name: "groups",
-      title: "Groups",
+      name: "tags",
+      title: "Tags",
       type: "array",
-      of: [{ type: "tagGroup" }],
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
     }),
   ],
 });

@@ -4,10 +4,25 @@ export default defineType({
   name: "siteSettings",
   title: "Site Settings",
   type: "document",
+  groups: [
+    {
+      name: "header",
+      title: "Header",
+    },
+    {
+      name: "errors",
+      title: "Errors",
+    },
+    {
+      name: "footer",
+      title: "Footer",
+    },
+  ],
   fields: [
     defineField({
       name: "navigation",
       title: "Navigation Links",
+      description: "Links to display in the site header and footer.",
       type: "array",
       of: [
         defineField({
@@ -21,94 +36,83 @@ export default defineType({
               type: "string",
             },
             {
+              name: "linkType",
+              title: "Link Type",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Page", value: "page" },
+                  { title: "Article", value: "article" },
+                ],
+                layout: "radio",
+                default: "page",
+              },
+            },
+            {
               name: "page",
               title: "Page Reference",
               type: "reference",
               to: [{ type: "page" }],
+              hidden: ({ parent }) => parent?.linkType !== "page",
             },
             {
-              name: "iconType",
-              title: "Icon Type",
-              type: "string",
-              options: {
-                list: [
-                  { title: "Pixel Icon", value: "pixel" },
-                  { title: "Uploaded Icon", value: "image" },
-                ],
-                layout: "radio",
-              },
-            },
-            {
-              name: "pixelIcon",
-              title: "Pixel Icon",
+              name: "article",
+              title: "Article Reference",
               type: "reference",
-              to: [{ type: "pixel" }],
-              hidden: ({ parent }) => parent?.iconType !== "pixel",
-            },
-            {
-              name: "uploadedIcon",
-              title: "Uploaded Icon",
-              type: "image",
-              options: { hotspot: true },
-              hidden: ({ parent }) => parent?.iconType !== "image",
+              to: [{ type: "article" }],
+              hidden: ({ parent }) => parent?.linkType !== "article",
             },
           ],
         }),
       ],
     }),
     defineField({
-      name: "footerText",
-      title: "Footer Text",
+      group: "header",
+      name: "headerCTA",
+      title: "Header Call to Action",
+      type: "reference",
+      to: [{ type: "button" }],
+    }),
+    defineField({
+      group: "errors",
+      name: "errorFallback",
+      title: "Error Fallback",
+      type: "object",
+      fields: [
+        defineField({
+          name: "title",
+          title: "Title",
+          type: "string",
+        }),
+        defineField({
+          name: "description",
+          title: "Description",
+          type: "text",
+          rows: 3,
+        }),
+        defineField({
+          name: "actionLabel",
+          title: "Action Label",
+          type: "string",
+        }),
+      ],
+    }),
+    defineField({
+      group: "footer",
+      name: "copyright",
+      title: "Copyright",
+      description: 'Current year added programmatically. E.g. "© Odd Since 2026".',
       type: "string",
     }),
     defineField({
+      group: "footer",
       name: "socialLinks",
       title: "Social Links",
       type: "array",
       of: [
-        defineField({
-          name: "socialLink",
-          title: "Social Link",
-          type: "object",
-          fields: [
-            {
-              name: "platform",
-              title: "Platform Name",
-              type: "string",
-            },
-            {
-              name: "url",
-              title: "URL",
-              type: "url",
-            },
-            {
-              name: "iconType",
-              title: "Icon Type",
-              type: "string",
-              options: {
-                list: [
-                  { title: "Pixel Icon", value: "pixel" },
-                  { title: "Uploaded Icon", value: "image" },
-                ],
-                layout: "dropdown",
-              },
-            },
-            {
-              name: "pixelIcon",
-              title: "Pixel Icon",
-              type: "reference",
-              to: [{ type: "pixel" }],
-              hidden: ({ parent }) => parent?.iconType !== "pixel",
-            },
-            {
-              name: "uploadedIcon",
-              title: "Uploaded Icon",
-              type: "image",
-              options: { hotspot: true },
-              hidden: ({ parent }) => parent?.iconType !== "image",
-            },
-          ],
-        }),
+        {
+          type: "socialLink",
+        },
       ],
     }),
   ],

@@ -12,25 +12,15 @@ export const accordionItem = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+    }),
+    defineField({
       name: "content",
       title: "Content",
       type: "array",
-      of: [{ type: "block" }, { type: "image" }],
-    }),
-  ],
-});
-
-export const accordion = defineType({
-  name: "accordion",
-  title: "Accordion",
-  type: "object",
-  fields: [
-    defineField({
-      name: "items",
-      title: "Items",
-      type: "array",
-      of: [{ type: "accordionItem" }],
-      validation: (Rule) => Rule.min(1),
+      of: [{ type: "block" }],
     }),
   ],
 });

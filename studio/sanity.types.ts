@@ -13,6 +13,218 @@
  */
 
 // Source: schema.json
+export type TagSections = {
+  _id: string;
+  _type: "tagSections";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heading?: string;
+  tagGroups?: Array<{
+    _key: string;
+  } & TagGroups>;
+};
+
+export type TagGroups = {
+  _type: "tagGroups";
+  heading?: string;
+  tags?: Array<string>;
+};
+
+export type SocialLink = {
+  _id: string;
+  _type: "socialLink";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: "linkedin" | "github" | "email";
+  url?: string;
+};
+
+export type SiteSettings = {
+  _id: string;
+  _type: "siteSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  navigation?: Array<{
+    label?: string;
+    linkType?: "page" | "article";
+    page?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "page";
+    };
+    article?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "article";
+    };
+    _type: "navLink";
+    _key: string;
+  }>;
+  headerCTA?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "button";
+  };
+  errorFallback?: {
+    title?: string;
+    description?: string;
+    actionLabel?: string;
+  };
+  copyright?: string;
+  socialLinks?: Array<{
+    _key: string;
+  } & SocialLink>;
+};
+
+export type SeoSettings = {
+  _id: string;
+  _type: "seoSettings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  defaultTitle?: string;
+  defaultDescription?: string;
+  defaultOgImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  defaultKeywords?: Array<string>;
+  defaultCanonicalUrl?: string;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  keywords?: Array<string>;
+  canonicalUrl?: string;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
+export type Body = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+  listItem?: "bullet" | "tag";
+  markDefs?: Array<{
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+} | {
+  asset?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+  };
+  media?: unknown;
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+  _key: string;
+}>;
+
+export type Page = {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heading?: string;
+  slug?: Slug;
+  themeColor?: Color;
+  intro?: string;
+  primaryCTA?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "button";
+  };
+  secondaryCTA?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "button";
+  };
+  pixelPuzzle?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "pixel";
+  };
+  featuredArticle?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "article";
+  };
+  seo?: Seo;
+};
+
+export type Color = {
+  _type: "color";
+  hex?: string;
+  alpha?: number;
+  hsl?: HslaColor;
+  hsv?: HsvaColor;
+  rgb?: RgbaColor;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
 export type Category = {
   _id: string;
   _type: "category";
@@ -32,6 +244,20 @@ export type Article = {
   _rev: string;
   title?: string;
   slug?: Slug;
+  isPrivate?: boolean;
+  gateTitle?: string;
+  primaryCTA?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "button";
+  };
+  secondaryCTA?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "button";
+  };
   author?: {
     _ref: string;
     _type: "reference";
@@ -59,55 +285,81 @@ export type Article = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  backgroundColor?: "dominant" | "vibrant" | "muted";
-  body?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?:
-          | "normal"
-          | "h1"
-          | "h2"
-          | "h3"
-          | "h4"
-          | "h5"
-          | "h6"
-          | "blockquote";
-        listItem?: "bullet" | "number";
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }
-    | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        _key: string;
-      }
-  >;
-  icon?: {
+  backgroundPalette?: "dominant" | "vibrant" | "muted";
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+    listItem?: "bullet" | "tag";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  pixelPuzzle?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "pixel";
   };
+  tagSections?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "tagSections";
+  }>;
+  contentSections?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "accordion";
+  }>;
   seo?: Seo;
+};
+
+export type Pixel = {
+  _id: string;
+  _type: "pixel";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  artwork?: string;
+  json?: string;
+  svg?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
 };
 
 export type Author = {
@@ -118,7 +370,36 @@ export type Author = {
   _rev: string;
   name?: string;
   slug?: Slug;
-  bio?: string;
+  bio?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+    listItem?: "bullet" | "tag";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
   avatar?: {
     asset?: {
       _ref: string;
@@ -131,81 +412,32 @@ export type Author = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-};
-
-export type SiteSettings = {
-  _id: string;
-  _type: "siteSettings";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  navigation?: Array<{
-    label?: string;
-    page?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "page";
-    };
-    iconType?: "pixel" | "image";
-    pixelIcon?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "pixel";
-    };
-    uploadedIcon?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    _type: "navLink";
-    _key: string;
-  }>;
-  footerText?: string;
   socialLinks?: Array<{
-    platform?: string;
-    url?: string;
-    iconType?: "pixel" | "image";
-    pixelIcon?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "pixel";
-    };
-    uploadedIcon?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    _type: "socialLink";
     _key: string;
-  }>;
+  } & SocialLink>;
 };
 
-export type SeoSettings = {
+export type Button = {
   _id: string;
-  _type: "seoSettings";
+  _type: "button";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  defaultTitle?: string;
-  defaultDescription?: string;
-  defaultOgImage?: {
+  label?: string;
+  linkType?: "page" | "article" | "anchor" | "contact";
+  action?: "internal" | "external" | "contact" | "download" | "anchor";
+  pageSlug?: string;
+  externalURL?: string;
+  articleSlug?: string;
+  anchor?: string;
+  contact?: string;
+  download?: string;
+};
+
+export type AccordionItem = {
+  _type: "accordionItem";
+  title?: string;
+  image?: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -217,35 +449,51 @@ export type SeoSettings = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  defaultKeywords?: Array<string>;
-  defaultCanonicalUrl?: string;
+  content?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
 };
 
-export type Page = {
+export type Accordion = {
   _id: string;
-  _type: "page";
+  _type: "accordion";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   heading?: string;
-  slug?: Slug;
-  intro?: string;
-  pixelPuzzle?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "pixel";
-  };
-  seo?: Seo;
-};
-
-export type Seo = {
-  _type: "seo";
-  title?: string;
-  description?: string;
-  keywords?: Array<string>;
-  canonicalUrl?: string;
-  ogImage?: {
+  summaryText?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+    listItem?: "bullet" | "tag";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -256,18 +504,44 @@ export type Seo = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
+    _key: string;
+  }>;
+  items?: Array<{
+    _key: string;
+  } & AccordionItem>;
 };
 
-export type Pixel = {
+export type MediaTag = {
   _id: string;
-  _type: "pixel";
+  _type: "media.tag";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  svg?: string;
-  json?: string;
+  name?: Slug;
+};
+
+export type RgbaColor = {
+  _type: "rgbaColor";
+  r?: number;
+  g?: number;
+  b?: number;
+  a?: number;
+};
+
+export type HsvaColor = {
+  _type: "hsvaColor";
+  h?: number;
+  s?: number;
+  v?: number;
+  a?: number;
+};
+
+export type HslaColor = {
+  _type: "hslaColor";
+  h?: number;
+  s?: number;
+  l?: number;
+  a?: number;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -296,20 +570,15 @@ export type SanityImageDimensions = {
   aspectRatio?: number;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+export type SanityImageMetadata = {
+  _type: "sanity.imageMetadata";
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -332,6 +601,13 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: "sanity.assetSourceData";
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
 export type SanityImageAsset = {
@@ -357,17 +633,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
-};
-
 export type Geopoint = {
   _type: "geopoint";
   lat?: number;
@@ -375,45 +640,11 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
-
-export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
-export type AllSanitySchemaTypes =
-  | Category
-  | Article
-  | Author
-  | SiteSettings
-  | SeoSettings
-  | Page
-  | Seo
-  | Pixel
-  | SanityImagePaletteSwatch
-  | SanityImagePalette
-  | SanityImageDimensions
-  | SanityImageHotspot
-  | SanityImageCrop
-  | SanityFileAsset
-  | SanityImageAsset
-  | SanityImageMetadata
-  | Geopoint
-  | Slug
-  | SanityAssetSourceData;
-
+export type AllSanitySchemaTypes = TagSections | TagGroups | SocialLink | SiteSettings | SeoSettings | SanityImageCrop | SanityImageHotspot | Seo | Body | Page | Color | Slug | Category | Article | Pixel | Author | Button | AccordionItem | Accordion | MediaTag | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-
-// Source: queries/article.ts
+// Source: ./queries/groq.ts
 // Variable: articleQuery
-// Query: *[_type == "article" && slug.current == $slug][0]{      title,      author->{        name,        avatar {          asset->{            url          }        },        bio,      },      body,      primaryCta->{        label,          type,      },      coverImage {        asset->{          url,          metadata {            palette {              dominant {                background,                foreground,                population,              },              vibrant {                background,                foreground              },              muted {                background,                foreground              }            },            blurHash          }        }      },      backgroundPalette,      "palettes": {        "dominant": coverImage.asset->metadata.palette.dominant,        "vibrant": coverImage.asset->metadata.palette.vibrant,        "muted": coverImage.asset->metadata.palette.muted      },      isPrivate,      puzzle->{        title,        svg,        json      },      excerpt,      "pixel": icon->svg,      tagGroupSections[]{        heading,        groups[]{          emoji,          tags        }      }    }
+// Query: *[_type == "article" && slug.current == $slug][0]{      title,      author->{        name,        avatar {          asset->{            url          }        },        bio,        socialLinks      },      body,      primaryCTA->{        label,        action,        linkType,        anchor,        externalURL,        contact,        download,        pageSlug,        articleSlug      },      secondaryCTA->{        label,        action,        linkType,        anchor,        externalURL,        contact,        download,        pageSlug,        articleSlug      },      coverImage {        asset->{          url,          metadata {            palette {              dominant { background, foreground, population },              vibrant { background, foreground },              muted { background, foreground }            },            blurHash          }        }      },      backgroundPalette,      "palettes": {        "dominant": coverImage.asset->metadata.palette.dominant,        "vibrant": coverImage.asset->metadata.palette.vibrant,        "muted": coverImage.asset->metadata.palette.muted      },      isPrivate,      gateTitle,      categories[]->{        title,        "slug": slug.current      },      pixelPuzzle->{        title,        artwork,        json,        "svg": svg.asset->url,      },      excerpt,      tagSections[]->{        _id,        heading,        tagGroups[]{          _key,          heading,          tags        }      },      contentSections[]->{        _id,        _type,        _type == "accordion" => {          heading,          summaryText,          items[]{            _key,            title,            image {              asset->{                url              }            },            content          }        },      }    }
 export type ArticleQueryResult = {
   title: string | null;
   author: {
@@ -423,50 +654,92 @@ export type ArticleQueryResult = {
         url: string | null;
       } | null;
     } | null;
-    bio: string | null;
+    bio: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+      listItem?: "bullet" | "tag";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    } | {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      _key: string;
+    }> | null;
+    socialLinks: Array<{
+      _key: string;
+    } & SocialLink> | null;
   } | null;
-  body: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?:
-          | "blockquote"
-          | "h1"
-          | "h2"
-          | "h3"
-          | "h4"
-          | "h5"
-          | "h6"
-          | "normal";
-        listItem?: "bullet" | "number";
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }
-    | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: "image";
-        _key: string;
-      }
-  > | null;
-  primaryCta: null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+    listItem?: "bullet" | "tag";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }> | null;
+  primaryCTA: {
+    label: string | null;
+    action: "anchor" | "contact" | "download" | "external" | "internal" | null;
+    linkType: "anchor" | "article" | "contact" | "page" | null;
+    anchor: string | null;
+    externalURL: string | null;
+    contact: string | null;
+    download: string | null;
+    pageSlug: string | null;
+    articleSlug: string | null;
+  } | null;
+  secondaryCTA: {
+    label: string | null;
+    action: "anchor" | "contact" | "download" | "external" | "internal" | null;
+    linkType: "anchor" | "article" | "contact" | "page" | null;
+    anchor: string | null;
+    externalURL: string | null;
+    contact: string | null;
+    download: string | null;
+    pageSlug: string | null;
+    articleSlug: string | null;
+  } | null;
   coverImage: {
     asset: {
       url: string | null;
@@ -490,40 +763,283 @@ export type ArticleQueryResult = {
       } | null;
     } | null;
   } | null;
-  backgroundPalette: null;
+  backgroundPalette: "dominant" | "muted" | "vibrant" | null;
   palettes: {
     dominant: SanityImagePaletteSwatch | null;
     vibrant: SanityImagePaletteSwatch | null;
     muted: SanityImagePaletteSwatch | null;
   };
-  isPrivate: null;
-  puzzle: null;
+  isPrivate: boolean | null;
+  gateTitle: string | null;
+  categories: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  pixelPuzzle: {
+    title: string | null;
+    artwork: string | null;
+    json: string | null;
+    svg: string | null;
+  } | null;
   excerpt: string | null;
-  pixel: string | null;
-  tagGroupSections: null;
+  tagSections: Array<{
+    _id: string;
+    heading: string | null;
+    tagGroups: Array<{
+      _key: string;
+      heading: string | null;
+      tags: Array<string> | null;
+    }> | null;
+  }> | null;
+  contentSections: Array<{
+    _id: string;
+    _type: "accordion";
+    heading: string | null;
+    summaryText: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+      listItem?: "bullet" | "tag";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    } | {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      _key: string;
+    }> | null;
+    items: Array<{
+      _key: string;
+      title: string | null;
+      image: {
+        asset: {
+          url: string | null;
+        } | null;
+      } | null;
+      content: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+    }> | null;
+  }> | null;
 } | null;
-
-// Source: queries/homePage.ts
 // Variable: homePageQuery
-// Query: *[_type == "page" && slug.current == "/"][0]{  heading,  intro,  "themeColor": {    "h": coalesce(themeColor.hsl.h, 200),    "s": coalesce(themeColor.hsl.s * 100, 100),    "l": coalesce(themeColor.hsl.l * 100, 50)  },  pixelPuzzle->{    title,    svg,    json  },  "articles": *[_type == "article" && references(^._id)]{    _key,    "slug": slug.current,    title,    excerpt,    coverImage {      asset->{        url,        metadata {          palette {            dominant { background, foreground, population },            vibrant { background, foreground },            muted { background, foreground }          },          blurHash        }      }    }  }}
+// Query: *[_type == "page" && slug.current == "/"][0]{  heading,  intro,  primaryCTA->{    label,    action,    linkType,    anchor,    externalURL,    contact,    download,    pageSlug,    articleSlug  },  secondaryCTA->{    label,    action,    linkType,    anchor,    externalURL,    contact,    download,    pageSlug,    articleSlug  },  "themeColor": {    "h": coalesce(themeColor.hsl.h, 200),    "s": coalesce(themeColor.hsl.s * 100, 100),    "l": coalesce(themeColor.hsl.l * 100, 50)  },  pixelPuzzle->{    title,    artwork,    "svg": svg.asset->url,    json  },  "featuredArticle": *[_type == "article" && "featured" in categories[]->slug.current][0]{    "slug": slug.current,    title,    excerpt,    body,    isPrivate,    author->{      name,      avatar { asset->{ url } },      bio    },    coverImage {      asset->{        url,        metadata {          palette {            dominant { background, foreground, population },            vibrant { background, foreground },            muted { background, foreground }          },          blurHash        }      }    },    backgroundPalette,    "palettes": {      "dominant": coverImage.asset->metadata.palette.dominant,      "vibrant": coverImage.asset->metadata.palette.vibrant,      "muted": coverImage.asset->metadata.palette.muted    },    pixelPuzzle->{      title,      artwork,      json,      "svg": svg.asset->url    },  },  "articles": *[_type == "article" && "featured" in categories[]->slug.current] {    _key,    "slug": slug.current,    title,    excerpt,    author->{      name,      "avatar": avatar.asset->url,      bio    },    coverImage {      asset->{        url,        metadata {          palette {            dominant { background, foreground, population },            vibrant { background, foreground },            muted { background, foreground }          },          blurHash        }      }    }  }}
 export type HomePageQueryResult = {
   heading: string | null;
   intro: string | null;
+  primaryCTA: {
+    label: string | null;
+    action: "anchor" | "contact" | "download" | "external" | "internal" | null;
+    linkType: "anchor" | "article" | "contact" | "page" | null;
+    anchor: string | null;
+    externalURL: string | null;
+    contact: string | null;
+    download: string | null;
+    pageSlug: string | null;
+    articleSlug: string | null;
+  } | null;
+  secondaryCTA: {
+    label: string | null;
+    action: "anchor" | "contact" | "download" | "external" | "internal" | null;
+    linkType: "anchor" | "article" | "contact" | "page" | null;
+    anchor: string | null;
+    externalURL: string | null;
+    contact: string | null;
+    download: string | null;
+    pageSlug: string | null;
+    articleSlug: string | null;
+  } | null;
   themeColor: {
-    h: 200;
-    s: 100;
-    l: 50;
+    h: number | 200;
+    s: number | 100;
+    l: number | 50;
   };
   pixelPuzzle: {
     title: string | null;
+    artwork: string | null;
     svg: string | null;
     json: string | null;
+  } | null;
+  featuredArticle: {
+    slug: string | null;
+    title: string | null;
+    excerpt: string | null;
+    body: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+      listItem?: "bullet" | "tag";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    } | {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+      _key: string;
+    }> | null;
+    isPrivate: boolean | null;
+    author: {
+      name: string | null;
+      avatar: {
+        asset: {
+          url: string | null;
+        } | null;
+      } | null;
+      bio: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      } | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }> | null;
+    } | null;
+    coverImage: {
+      asset: {
+        url: string | null;
+        metadata: {
+          palette: {
+            dominant: {
+              background: string | null;
+              foreground: string | null;
+              population: number | null;
+            } | null;
+            vibrant: {
+              background: string | null;
+              foreground: string | null;
+            } | null;
+            muted: {
+              background: string | null;
+              foreground: string | null;
+            } | null;
+          } | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+    backgroundPalette: "dominant" | "muted" | "vibrant" | null;
+    palettes: {
+      dominant: SanityImagePaletteSwatch | null;
+      vibrant: SanityImagePaletteSwatch | null;
+      muted: SanityImagePaletteSwatch | null;
+    };
+    pixelPuzzle: {
+      title: string | null;
+      artwork: string | null;
+      json: string | null;
+      svg: string | null;
+    } | null;
   } | null;
   articles: Array<{
     _key: null;
     slug: string | null;
     title: string | null;
     excerpt: string | null;
+    author: {
+      name: string | null;
+      avatar: string | null;
+      bio: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      } | {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }> | null;
+    } | null;
     coverImage: {
       asset: {
         url: string | null;
@@ -549,32 +1065,38 @@ export type HomePageQueryResult = {
     } | null;
   }>;
 } | null;
-
-// Source: queries/siteSettings.ts
 // Variable: siteSettingsQuery
-// Query: *[_type == "siteSettings"][0]{      navigation[] {        _key,        label,        "slug": page->slug.current,        iconType,        pixelIcon->{          title,          svg        },        "uploadedIcon": uploadedIcon.asset->url      },      footerText,      socialLinks[] {        platform,        url,        iconType,        pixelIcon->{          title,          svg        },        "uploadedIcon": uploadedIcon.asset->url      }    }
+// Query: *[_type == "siteSettings"][0]{      navigation[] {        _key,        label,        linkType,        "slug": select(          linkType == "page" => page->slug.current,          linkType == "article" => "article/" + article->slug.current,          null        ),        "href": select(          linkType == "page" => page->slug.current,          linkType == "article" => "/article/" + article->slug.current,          null        )      },      headerCTA->{        label,        action,        linkType,        anchor,        externalURL,        contact,        download,        "slug": select(          linkType == "page" => pageSlug,          linkType == "article" => "article/" + articleSlug,          null        ),        "href": select(          linkType == "page" => pageSlug,          linkType == "article" => "/article/" + articleSlug,          null        ),        pageSlug,        articleSlug      },      errorFallback {        title,        description,        actionLabel      },      copyright,      socialLinks[] {        name,        url      }    }
 export type SiteSettingsQueryResult = {
   navigation: Array<{
     _key: string;
     label: string | null;
+    linkType: "article" | "page" | null;
     slug: string | null;
-    iconType: "image" | "pixel" | null;
-    pixelIcon: {
-      title: string | null;
-      svg: string | null;
-    } | null;
-    uploadedIcon: string | null;
+    href: string | null;
   }> | null;
-  footerText: string | null;
+  headerCTA: {
+    label: string | null;
+    action: "anchor" | "contact" | "download" | "external" | "internal" | null;
+    linkType: "anchor" | "article" | "contact" | "page" | null;
+    anchor: string | null;
+    externalURL: string | null;
+    contact: string | null;
+    download: string | null;
+    slug: string | null;
+    href: string | null;
+    pageSlug: string | null;
+    articleSlug: string | null;
+  } | null;
+  errorFallback: {
+    title: string | null;
+    description: string | null;
+    actionLabel: string | null;
+  } | null;
+  copyright: string | null;
   socialLinks: Array<{
-    platform: string | null;
-    url: string | null;
-    iconType: "image" | "pixel" | null;
-    pixelIcon: {
-      title: string | null;
-      svg: string | null;
-    } | null;
-    uploadedIcon: string | null;
+    name: null;
+    url: null;
   }> | null;
 } | null;
 
@@ -582,8 +1104,8 @@ export type SiteSettingsQueryResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '\n    *[_type == "article" && slug.current == $slug][0]{\n      title,\n      author->{\n        name,\n        avatar {\n          asset->{\n            url\n          }\n        },\n        bio,\n      },\n      body,\n      primaryCta->{\n        label,  \n        type,\n      },\n      coverImage {\n        asset->{\n          url,\n          metadata {\n            palette {\n              dominant {\n                background,\n                foreground,\n                population,\n              },\n              vibrant {\n                background,\n                foreground\n              },\n              muted {\n                background,\n                foreground\n              }\n            },\n            blurHash\n          }\n        }\n      },\n      backgroundPalette,\n      "palettes": {\n        "dominant": coverImage.asset->metadata.palette.dominant,\n        "vibrant": coverImage.asset->metadata.palette.vibrant,\n        "muted": coverImage.asset->metadata.palette.muted\n      },\n      isPrivate,\n      puzzle->{\n        title,\n        svg,\n        json\n      },\n      excerpt,\n      "pixel": icon->svg,\n      tagGroupSections[]{\n        heading,\n        groups[]{\n          emoji,\n          tags\n        }\n      }\n    }\n  ': ArticleQueryResult;
-    '*[_type == "page" && slug.current == "/"][0]{\n  heading,\n  intro,\n  "themeColor": {\n    "h": coalesce(themeColor.hsl.h, 200),\n    "s": coalesce(themeColor.hsl.s * 100, 100),\n    "l": coalesce(themeColor.hsl.l * 100, 50)\n  },\n  pixelPuzzle->{\n    title,\n    svg,\n    json\n  },\n  "articles": *[_type == "article" && references(^._id)]{\n    _key,\n    "slug": slug.current,\n    title,\n    excerpt,\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    }\n  }\n}\n': HomePageQueryResult;
-    '*[_type == "siteSettings"][0]{\n      navigation[] {\n        _key,\n        label,\n        "slug": page->slug.current,\n        iconType,\n        pixelIcon->{\n          title,\n          svg\n        },\n        "uploadedIcon": uploadedIcon.asset->url\n      },\n      footerText,\n      socialLinks[] {\n        platform,\n        url,\n        iconType,\n        pixelIcon->{\n          title,\n          svg\n        },\n        "uploadedIcon": uploadedIcon.asset->url\n      }\n    }': SiteSettingsQueryResult;
+    "\n    *[_type == \"article\" && slug.current == $slug][0]{\n      title,\n      author->{\n        name,\n        avatar {\n          asset->{\n            url\n          }\n        },\n        bio,\n        socialLinks\n      },\n      body,\n      primaryCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        pageSlug,\n        articleSlug\n      },\n      secondaryCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        pageSlug,\n        articleSlug\n      },\n      coverImage {\n        asset->{\n          url,\n          metadata {\n            palette {\n              dominant { background, foreground, population },\n              vibrant { background, foreground },\n              muted { background, foreground }\n            },\n            blurHash\n          }\n        }\n      },\n      backgroundPalette,\n      \"palettes\": {\n        \"dominant\": coverImage.asset->metadata.palette.dominant,\n        \"vibrant\": coverImage.asset->metadata.palette.vibrant,\n        \"muted\": coverImage.asset->metadata.palette.muted\n      },\n      isPrivate,\n      gateTitle,\n      categories[]->{\n        title,\n        \"slug\": slug.current\n      },\n      pixelPuzzle->{\n        title,\n        artwork,\n        json,\n        \"svg\": svg.asset->url,\n      },\n      excerpt,\n      tagSections[]->{\n        _id,\n        heading,\n        tagGroups[]{\n          _key,\n          heading,\n          tags\n        }\n      },\n      contentSections[]->{\n        _id,\n        _type,\n        _type == \"accordion\" => {\n          heading,\n          summaryText,\n          items[]{\n            _key,\n            title,\n            image {\n              asset->{\n                url\n              }\n            },\n            content\n          }\n        },\n      }\n    }\n  ": ArticleQueryResult;
+    "*[_type == \"page\" && slug.current == \"/\"][0]{\n  heading,\n  intro,\n  primaryCTA->{\n    label,\n    action,\n    linkType,\n    anchor,\n    externalURL,\n    contact,\n    download,\n    pageSlug,\n    articleSlug\n  },\n  secondaryCTA->{\n    label,\n    action,\n    linkType,\n    anchor,\n    externalURL,\n    contact,\n    download,\n    pageSlug,\n    articleSlug\n  },\n  \"themeColor\": {\n    \"h\": coalesce(themeColor.hsl.h, 200),\n    \"s\": coalesce(themeColor.hsl.s * 100, 100),\n    \"l\": coalesce(themeColor.hsl.l * 100, 50)\n  },\n  pixelPuzzle->{\n    title,\n    artwork,\n    \"svg\": svg.asset->url,\n    json\n  },\n  \"featuredArticle\": *[_type == \"article\" && \"featured\" in categories[]->slug.current][0]{\n    \"slug\": slug.current,\n    title,\n    excerpt,\n    body,\n    isPrivate,\n    author->{\n      name,\n      avatar { asset->{ url } },\n      bio\n    },\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    },\n    backgroundPalette,\n    \"palettes\": {\n      \"dominant\": coverImage.asset->metadata.palette.dominant,\n      \"vibrant\": coverImage.asset->metadata.palette.vibrant,\n      \"muted\": coverImage.asset->metadata.palette.muted\n    },\n    pixelPuzzle->{\n      title,\n      artwork,\n      json,\n      \"svg\": svg.asset->url\n    },\n  },\n  \"articles\": *[_type == \"article\" && \"featured\" in categories[]->slug.current] {\n    _key,\n    \"slug\": slug.current,\n    title,\n    excerpt,\n    author->{\n      name,\n      \"avatar\": avatar.asset->url,\n      bio\n    },\n    coverImage {\n      asset->{\n        url,\n        metadata {\n          palette {\n            dominant { background, foreground, population },\n            vibrant { background, foreground },\n            muted { background, foreground }\n          },\n          blurHash\n        }\n      }\n    }\n  }\n}\n": HomePageQueryResult;
+    "*[_type == \"siteSettings\"][0]{\n      navigation[] {\n        _key,\n        label,\n        linkType,\n        \"slug\": select(\n          linkType == \"page\" => page->slug.current,\n          linkType == \"article\" => \"article/\" + article->slug.current,\n          null\n        ),\n        \"href\": select(\n          linkType == \"page\" => page->slug.current,\n          linkType == \"article\" => \"/article/\" + article->slug.current,\n          null\n        )\n      },\n      headerCTA->{\n        label,\n        action,\n        linkType,\n        anchor,\n        externalURL,\n        contact,\n        download,\n        \"slug\": select(\n          linkType == \"page\" => pageSlug,\n          linkType == \"article\" => \"article/\" + articleSlug,\n          null\n        ),\n        \"href\": select(\n          linkType == \"page\" => pageSlug,\n          linkType == \"article\" => \"/article/\" + articleSlug,\n          null\n        ),\n        pageSlug,\n        articleSlug\n      },\n      errorFallback {\n        title,\n        description,\n        actionLabel\n      },\n      copyright,\n      socialLinks[] {\n        name,\n        url\n      }\n    }": SiteSettingsQueryResult;
   }
 }

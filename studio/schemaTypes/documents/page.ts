@@ -27,7 +27,18 @@ export default defineType({
       name: "intro",
       title: "Intro Text",
       type: "text",
-      rows: 3,
+    }),
+    defineField({
+      name: "primaryCTA",
+      title: "Primary CTA",
+      type: "reference",
+      to: [{ type: "button" }],
+    }),
+    defineField({
+      name: "secondaryCTA",
+      title: "Secondary CTA",
+      type: "reference",
+      to: [{ type: "button" }],
     }),
     defineField({
       name: "pixelPuzzle",
@@ -37,10 +48,10 @@ export default defineType({
       options: { disableNew: false },
     }),
     defineField({
-      name: "articles",
-      title: "Articles",
-      type: "array",
-      of: [{ type: "reference", to: [{ type: "article" }] }],
+      name: "featuredArticle",
+      title: "Featured Article",
+      type: "reference",
+      to: [{ type: "article" }],
     }),
     defineField({
       name: "seo",

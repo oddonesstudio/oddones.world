@@ -1,30 +1,35 @@
-import article from "./content/article";
-import page from "./content/page";
-import pixel from "./content/pixel";
+import { accordion } from "./documents/accordion";
+import article from "./documents/article";
+import author from "./documents/author";
+import button from "./documents/button";
+import category from "./documents/category";
+import page from "./documents/page";
+import pixel from "./documents/pixel";
+import socialLink from "./documents/socialLink";
+import tagSections from "./documents/tagSections";
+import richText from "./fields/richText";
 
-import author from "./fields/author";
-import { accordion, accordionItem } from "./fields/accordion";
-import button from "./fields/button";
-import category from "./fields/category";
-import seo from "./fields/seo";
-import tagGroup from "./fields/tagGroup";
-import tagGroupSection from "./fields/tagGroupSection";
+import { accordionItem } from "./objects/accordionItem";
+import seo from "./objects/seo";
+import tagGroups from "./objects/tagGroups";
 
 import seoSettings from "./settings/seoSettings";
 import siteSettings from "./settings/siteSettings";
 
 export const schemaTypes = [
-  page,
-  article,
-  pixel,
-  author,
   accordion,
   accordionItem,
+  article,
+  author,
   button,
   category,
-  tagGroup,
-  tagGroupSection,
+  page,
+  pixel,
+  richText,
   seo,
   seoSettings,
   siteSettings,
+  socialLink,
+  tagGroups,
+  tagSections,
 ];
