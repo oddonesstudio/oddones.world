@@ -134,7 +134,7 @@ export const homePageQuery = groq`*[_type == "page" && slug.current == "/"][0]{
     "svg": svg.asset->url,
     json
   },
-  "featuredArticle": *[_type == "article" && "featured" in categories[]->slug.current][0]{
+  "featuredArticle": coalesce(featuredArticle->{
     "slug": slug.current,
     title,
     excerpt,
@@ -170,8 +170,44 @@ export const homePageQuery = groq`*[_type == "page" && slug.current == "/"][0]{
       json,
       "svg": svg.asset->url
     },
-  },
-  "articles": *[_type == "article" && "featured" in categories[]->slug.current] {
+  }, *[_type == "article" && "featured" in categories[]->slug.current] | order(publishedAt desc, _updatedAt desc)[0]{
+    "slug": slug.current,
+    title,
+    excerpt,
+    body,
+    isPrivate,
+    author->{
+      name,
+      avatar { asset->{ url } },
+      bio
+    },
+    coverImage {
+      asset->{
+        url,
+        metadata {
+          palette {
+            dominant { background, foreground, population },
+            vibrant { background, foreground },
+            muted { background, foreground }
+          },
+          blurHash
+        }
+      }
+    },
+    backgroundPalette,
+    "palettes": {
+      "dominant": coverImage.asset->metadata.palette.dominant,
+      "vibrant": coverImage.asset->metadata.palette.vibrant,
+      "muted": coverImage.asset->metadata.palette.muted
+    },
+    pixelPuzzle->{
+      title,
+      artwork,
+      json,
+      "svg": svg.asset->url
+    },
+  }),
+  "articles": *[_type == "article" && "featured" in categories[]->slug.current] | order(publishedAt desc, _updatedAt desc) {
     _key,
     "slug": slug.current,
     title,

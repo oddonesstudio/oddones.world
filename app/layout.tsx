@@ -54,6 +54,7 @@ export default async function RootLayout({
   const { data: siteSettings } = await sanityFetch<SiteSettingsQueryResult>({
     query: siteSettingsQuery,
     stega: false,
+    tags: ["sanity:site-settings"],
   });
   const isDraftMode = (await draftMode()).isEnabled;
 

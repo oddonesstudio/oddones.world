@@ -26,6 +26,7 @@ export const sanityFetch = sanityFetchBase as <T = unknown>(params: {
   query: string;
   params?: Record<string, unknown>;
   stega?: boolean;
+  tags?: string[];
 }) => Promise<{ data: T | null }>;
 
 export { SanityLive };

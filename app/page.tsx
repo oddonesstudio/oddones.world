@@ -12,7 +12,10 @@ import { FeaturedArticlePortal } from "@/ui/components/FeaturedArticlePortal";
 import { Hero } from "@/ui/content-sections/Hero";
 
 export default async function Home() {
-  const { data: page } = await sanityFetch<HomePageQueryResult>({ query: homePageQuery });
+  const { data: page } = await sanityFetch<HomePageQueryResult>({
+    query: homePageQuery,
+    tags: ["sanity:home"],
+  });
 
   if (!page) {
     return notFound();
@@ -25,10 +28,7 @@ export default async function Home() {
     : undefined;
 
   return (
-    <div
-      className="bg-page-background pt-(--header-height) rounded-lg pb-(--footer-height)"
-      style={pageStyle}
-    >
+    <div className="bg-page-background pt-(--header-height) pb-(--footer-height)" style={pageStyle}>
       <Hero
         heading={page.heading}
         intro={page.intro}

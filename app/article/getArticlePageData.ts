@@ -48,6 +48,7 @@ export async function getArticlePageData(slug: string): Promise<ArticlePageProps
   const { data: article } = await sanityFetch<ArticleQueryResult>({
     query: articleQuery,
     params: { slug },
+    tags: ["sanity:article", `sanity:article:${slug}`],
   });
 
   if (!article) {

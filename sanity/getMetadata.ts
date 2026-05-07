@@ -4,6 +4,26 @@ interface MetadataProps {
   slug?: string;
 }
 
+type MetadataQueryResult = {
+  content?: {
+    _type?: string;
+    title?: string;
+    seo?: {
+      title?: string;
+      description?: string;
+      ogImage?: string;
+      canonicalUrl?: string;
+    };
+    coverImage?: string;
+  } | null;
+  global?: {
+    defaultTitle?: string;
+    defaultDescription?: string;
+    ogImage?: string;
+    defaultCanonicalUrl?: string;
+  } | null;
+};
+
 export async function getMetadata({ slug }: MetadataProps = {}) {
   const contentQuery = slug
     ? `*[_type in ["page", "article"] && slug.current == $slug][0]{
@@ -33,11 +53,13 @@ export async function getMetadata({ slug }: MetadataProps = {}) {
     }
   }`;
 
-  const { data } = await sanityFetch({ query, params: { slug }, stega: false });
-  const { content, global } = data as {
-    content?: Record<string, any> | null;
-    global?: Record<string, any> | null;
-  };
+  const { data } = await sanityFetch({
+    query,
+    params: { slug },
+    stega: false,
+    tags: slug ? ["sanity:seo", `sanity:metadata:${slug}`] : ["sanity:seo"],
+  });
+  const { content, global } = data as MetadataQueryResult;
 
   // Priorities:
   // 1. Content-level SEO

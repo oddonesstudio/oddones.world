@@ -10,7 +10,7 @@
   --page-background: #f9ece4;
   --page-foreground: #131313;
 
-  --header-height: clamp(5rem, 3.333rem + 7.407vw, 10rem);
+  --header-height: clamp(6.875rem, 5.833rem + 4.63vw, 10rem);
   --footer-height: 50vh;
 
   --left-right: clamp(1rem, -0.333rem + 5.926vw, 5rem);
