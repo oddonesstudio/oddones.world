@@ -17,6 +17,7 @@ import { WavyFooter } from "../ui/global/WavyFooter";
 import { AppUiProvider } from "./components/AppUiContext";
 import { ModalSlotPresence } from "./components/ModalSlotPresence";
 import { MotionLayoutRoot } from "./components/MotionLayoutRoot";
+import { SanityPreviewExit } from "./components/SanityPreviewExit";
 import { resolveButtonHref } from "./utils/resolveButtonHref";
 
 import "./styles/globals.css";
@@ -78,7 +79,12 @@ export default async function RootLayout({
           <WavyFooter copyright={siteSettings?.copyright} />
         </AppUiProvider>
         <SanityLive />
-        {isDraftMode ? <VisualEditing /> : null}
+        {isDraftMode ? (
+          <>
+            <SanityPreviewExit />
+            <VisualEditing />
+          </>
+        ) : null}
       </body>
     </html>
   );

@@ -5,5 +5,11 @@ export async function GET(request: Request) {
   const draft = await draftMode();
   draft.disable();
   const url = new URL(request.url);
-  return NextResponse.redirect(new URL("/", url.origin));
+  const redirectPath = url.searchParams.get("redirect") || "/";
+  const redirectUrl =
+    redirectPath.startsWith("/") && !redirectPath.startsWith("//")
+      ? new URL(redirectPath, url.origin)
+      : new URL("/", url.origin);
+
+  return NextResponse.redirect(redirectUrl);
 }
