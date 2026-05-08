@@ -19,12 +19,14 @@ interface AccordionProps {
   items: AccordionItemType[];
 }
 
-const IMAGE_CLOSE_DURATION = 320;
 const MOBILE_MEDIA_QUERY = "(max-width: 767px)";
+const LAYOUT_TRANSITION_DURATION = 0.42;
 const LAYOUT_TRANSITION = {
-  duration: 0.42,
+  type: "tween",
+  duration: LAYOUT_TRANSITION_DURATION,
   ease: [0.22, 1, 0.36, 1],
 } as const;
+const IMAGE_CLOSE_DURATION = LAYOUT_TRANSITION_DURATION * 1000;
 
 const mobileImageVariants: Variants = {
   closed: {
@@ -189,6 +191,7 @@ const AccordionItem = ({
   const [isLayoutOpen, setIsLayoutOpen] = useState(isOpen);
   const isMobile = useIsMobile();
   const imageUrl = item.image?.asset?.url;
+  const layoutState = isOpen && !isClosing && imageUrl ? "open" : "closed";
 
   useEffect(() => {
     if (isOpen) {
@@ -210,7 +213,7 @@ const AccordionItem = ({
     <RadixAccordion.Item value={item._key} asChild>
       <motion.div
         className="grid gap-4 py-4 md:gap-x-8"
-        animate={isLayoutOpen && imageUrl ? "open" : "closed"}
+        animate={layoutState}
         variants={isMobile ? mobileItemVariants : desktopItemVariants}
         transition={LAYOUT_TRANSITION}
       >
@@ -218,13 +221,13 @@ const AccordionItem = ({
           {imageUrl && (
             <motion.div
               animate={isOpen && !isClosing ? "open" : "closed"}
-              className="overflow-hidden bg-black/5"
+              className="overflow-hidden bg-black/5 max-md:max-w-45"
               variants={isMobile ? mobileImageVariants : desktopImageVariants}
               transition={LAYOUT_TRANSITION}
             >
               <Image
                 src={imageUrl}
-                alt={item.title ?? ""}
+                alt={String(item.title) ?? ""}
                 width={220}
                 height={220}
                 className="h-full w-full object-contain"
@@ -236,7 +239,7 @@ const AccordionItem = ({
           className={cn("flex items-center justify-between", !isLayoutOpen && "row-span-2")}
         >
           <RadixAccordion.Trigger className="group flex justify-between w-full items-center gap-2 text-left text-lg font-medium cursor-pointer">
-            <span>{item.title}</span>
+            <PortableTextRenderer value={item.title} />
             <motion.span
               animate={isOpen && !isClosing ? "open" : "closed"}
               className="shrink-0"

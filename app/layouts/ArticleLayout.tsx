@@ -51,7 +51,7 @@ const getContentSectionHeadingId = (key: string) => `content-section-${key}`;
 const styles = tv({
   slots: {
     base: "relative flex h-full min-h-full flex-col items-stretch text-foreground text-black",
-    body: "bg-white max-w-full flex flex-col gap-10 md:gap-20 pt-editorial",
+    body: "bg-white max-w-full flex flex-col md:gap-20 pt-editorial",
     grid: "grid md:grid-cols-3 gap-10 md:gap-20",
     aside: "flex flex-col gap-10 md:col-span-1 md:sticky md:top-10 md:h-fit",
   },

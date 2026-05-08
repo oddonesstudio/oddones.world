@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import richText from "../fields/richText";
 
 export const accordionItem = defineType({
   name: "accordionItem",
@@ -6,9 +7,9 @@ export const accordionItem = defineType({
   type: "object",
   fields: [
     defineField({
+      ...richText,
       name: "title",
       title: "Title",
-      type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -17,10 +18,9 @@ export const accordionItem = defineType({
       type: "image",
     }),
     defineField({
+      ...richText,
       name: "content",
       title: "Content",
-      type: "array",
-      of: [{ type: "block" }],
     }),
   ],
 });

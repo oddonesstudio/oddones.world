@@ -160,7 +160,7 @@ export type Body = Array<
         _type: "span";
         _key: string;
       }>;
-      style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+      style?: "normal" | "h2" | "h3" | "blockquote";
       listItem?: "bullet" | "tag";
       markDefs?: Array<{
         href?: string;
@@ -295,7 +295,7 @@ export type Article = {
           _type: "span";
           _key: string;
         }>;
-        style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+        style?: "normal" | "h2" | "h3" | "blockquote";
         listItem?: "bullet" | "tag";
         markDefs?: Array<{
           href?: string;
@@ -363,7 +363,7 @@ export type Author = {
           _type: "span";
           _key: string;
         }>;
-        style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+        style?: "normal" | "h2" | "h3" | "blockquote";
         listItem?: "bullet" | "tag";
         markDefs?: Array<{
           href?: string;
@@ -417,7 +417,34 @@ export type Button = {
 
 export type AccordionItem = {
   _type: "accordionItem";
-  title?: string;
+  title?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "normal" | "h2" | "h3" | "blockquote";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  >;
   image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -425,24 +452,34 @@ export type AccordionItem = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  content?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
+  content?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "normal" | "h2" | "h3" | "blockquote";
+        listItem?: "bullet" | "tag";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+        _key: string;
+      }
+  >;
 };
 
 export type Accordion = {
@@ -460,7 +497,7 @@ export type Accordion = {
           _type: "span";
           _key: string;
         }>;
-        style?: "meow" | "normal" | "h2" | "h3" | "blockquote";
+        style?: "normal" | "h2" | "h3" | "blockquote";
         listItem?: "bullet" | "tag";
         markDefs?: Array<{
           href?: string;
@@ -679,7 +716,7 @@ export type ArticleQueryResult = {
             _type: "span";
             _key: string;
           }>;
-          style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+          style?: "blockquote" | "h2" | "h3" | "normal";
           listItem?: "bullet" | "tag";
           markDefs?: Array<{
             href?: string;
@@ -714,7 +751,7 @@ export type ArticleQueryResult = {
           _type: "span";
           _key: string;
         }>;
-        style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+        style?: "blockquote" | "h2" | "h3" | "normal";
         listItem?: "bullet" | "tag";
         markDefs?: Array<{
           href?: string;
@@ -819,7 +856,7 @@ export type ArticleQueryResult = {
             _type: "span";
             _key: string;
           }>;
-          style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+          style?: "blockquote" | "h2" | "h3" | "normal";
           listItem?: "bullet" | "tag";
           markDefs?: Array<{
             href?: string;
@@ -841,38 +878,67 @@ export type ArticleQueryResult = {
     > | null;
     items: Array<{
       _key: string;
-      title: string | null;
+      title: Array<
+        | {
+            children?: Array<{
+              marks?: Array<string>;
+              text?: string;
+              _type: "span";
+              _key: string;
+            }>;
+            style?: "blockquote" | "h2" | "h3" | "normal";
+            listItem?: "bullet" | "tag";
+            markDefs?: Array<{
+              href?: string;
+              _type: "link";
+              _key: string;
+            }>;
+            level?: number;
+            _type: "block";
+            _key: string;
+          }
+        | {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            _key: string;
+          }
+      > | null;
       image: {
         asset: {
           url: string | null;
         } | null;
       } | null;
-      content: Array<{
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?:
-          | "blockquote"
-          | "h1"
-          | "h2"
-          | "h3"
-          | "h4"
-          | "h5"
-          | "h6"
-          | "normal";
-        listItem?: "bullet" | "number";
-        markDefs?: Array<{
-          href?: string;
-          _type: "link";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }> | null;
+      content: Array<
+        | {
+            children?: Array<{
+              marks?: Array<string>;
+              text?: string;
+              _type: "span";
+              _key: string;
+            }>;
+            style?: "blockquote" | "h2" | "h3" | "normal";
+            listItem?: "bullet" | "tag";
+            markDefs?: Array<{
+              href?: string;
+              _type: "link";
+              _key: string;
+            }>;
+            level?: number;
+            _type: "block";
+            _key: string;
+          }
+        | {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+            _key: string;
+          }
+      > | null;
     }> | null;
   }> | null;
 } | null;
@@ -928,7 +994,7 @@ export type HomePageQueryResult = {
             _type: "span";
             _key: string;
           }>;
-          style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+          style?: "blockquote" | "h2" | "h3" | "normal";
           listItem?: "bullet" | "tag";
           markDefs?: Array<{
             href?: string;
@@ -964,7 +1030,7 @@ export type HomePageQueryResult = {
               _type: "span";
               _key: string;
             }>;
-            style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+            style?: "blockquote" | "h2" | "h3" | "normal";
             listItem?: "bullet" | "tag";
             markDefs?: Array<{
               href?: string;
@@ -1037,7 +1103,7 @@ export type HomePageQueryResult = {
               _type: "span";
               _key: string;
             }>;
-            style?: "blockquote" | "h2" | "h3" | "meow" | "normal";
+            style?: "blockquote" | "h2" | "h3" | "normal";
             listItem?: "bullet" | "tag";
             markDefs?: Array<{
               href?: string;

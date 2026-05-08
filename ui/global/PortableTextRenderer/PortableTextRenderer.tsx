@@ -52,7 +52,7 @@ const LinkMark: PortableTextMarkComponent<LinkMark> = ({ children, value }) => {
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className="font-semibold underline decoration-black/30 underline-offset-4 transition hover:text-black hover:decoration-black"
+      className="inline text-black font-semibold underline-offset-4 transition hover:underline"
     >
       {children}
     </Link>
@@ -94,12 +94,12 @@ const components: PortableTextComponents = {
       </Text>
     ),
     normal: ({ children }) => (
-      <Text as="p" styleType="body-md" className="mb-4 text-black/80">
+      <Text as="p" styleType="body-md" className="not-last-of-type:mb-4 text-black/80">
         {children}
       </Text>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-8 border-l-2 border-black/20 pl-5 italic text-body-lg text-[#4a4a4a]">
+      <blockquote className="my-8 border-l-2 border-black/20 pl-5 italic text-body-md text-[#4a4a4a]">
         {children}
       </blockquote>
     ),

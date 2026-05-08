@@ -8,7 +8,6 @@ export default defineField({
     {
       type: "block",
       styles: [
-        { title: "Meow", value: "meow" },
         { title: "Normal", value: "normal" },
         { title: "Heading 2", value: "h2" },
         { title: "Heading 3", value: "h3" },
