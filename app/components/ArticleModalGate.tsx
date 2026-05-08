@@ -20,7 +20,6 @@ const styles = tv({
     gateWrapper:
       "relative z-10 flex flex-col items-center gap-8 p-6 text-page-background pointer-events-auto",
     gateForm: "flex w-full max-w-[400px] flex-col items-center gap-6",
-    gateMobileHint: "max-w-[360px] text-center text-sm leading-6 text-page-background/75 md:hidden",
   },
 });
 
@@ -47,7 +46,6 @@ export function ArticleModalGate({
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [spotlightActive, setSpotlightActive] = useState(false);
   const [spotlightEnabled, setSpotlightEnabled] = useState(false);
-  const [needsMobilePuzzleHint, setNeedsMobilePuzzleHint] = useState(false);
   const handledPuzzleSolvedVersion = useRef(puzzleSolved.version);
   const baseRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -78,7 +76,6 @@ export function ArticleModalGate({
     const mobileMedia = window.matchMedia("(hover: none), (pointer: coarse)");
     const updateMedia = () => {
       setSpotlightEnabled(media.matches);
-      setNeedsMobilePuzzleHint(mobileMedia.matches);
     };
     updateMedia();
     media.addEventListener("change", updateMedia);
@@ -149,7 +146,7 @@ export function ArticleModalGate({
 
   if (isUnlocked) return null;
 
-  const { gateBase, gateForm, gateMobileHint, gateOverlay, gateWrapper } = styles();
+  const { gateBase, gateForm, gateOverlay, gateWrapper } = styles();
   const shouldReveal = spotlightEnabled && spotlightActive && !puzzleDialogOpen;
 
   return (
@@ -179,11 +176,12 @@ export function ArticleModalGate({
         <Text as="h1" styleType="heading-xl">
           {title}
         </Text>
-        {needsMobilePuzzleHint ? (
-          <p className={gateMobileHint()}>
-            Open this article on desktop to reveal the hidden puzzle, then enter the password here.
-          </p>
-        ) : null}
+        <Text as="p" styleType="body-md" className="md:hidden text-center">
+          Open on desktop to reveal the hidden puzzle, or enter password here...
+        </Text>
+        <Text as="p" styleType="body-md" className="max-md:hidden">
+          Enter password or look for the hidden puzzle 👀
+        </Text>
         <form onSubmit={handleSubmit} className={gateForm()}>
           <div className="relative w-full">
             <PasswordToggleField.Root>
