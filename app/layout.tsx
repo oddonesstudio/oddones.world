@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import { Bowlby_One, Inter, Roboto_Mono } from "next/font/google";
 import { draftMode } from "next/headers";
 import { VisualEditing } from "next-sanity/visual-editing";
@@ -22,6 +23,11 @@ import { resolveButtonHref } from "./utils/resolveButtonHref";
 
 import "./styles/globals.css";
 
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  viewportFit: "cover",
+};
+
 const bowlby = Bowlby_One({
   variable: "--font-bowlby",
   subsets: ["latin"],
@@ -41,7 +47,7 @@ const robotoMono = Roboto_Mono({
 });
 
 export async function generateMetadata() {
-  return getMetadata();
+  return getMetadata({ path: "/", slug: "/" });
 }
 
 export default async function RootLayout({
