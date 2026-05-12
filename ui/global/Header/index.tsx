@@ -8,6 +8,7 @@ import { Popover } from "radix-ui";
 import React from "react";
 
 import { useAppUi } from "@/app/components/AppUiContext";
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
 import type { Navigation } from "@/app/types/sanity";
 import { getScrollRevealState } from "@/app/utils/scroll";
 
@@ -19,8 +20,8 @@ import { Container } from "../Container";
 
 const styles = tv({
   slots: {
-    base: "pointer-events-none absolute left-0 w-full",
-    motionContainer: "pointer-events-auto md:fixed top-0 left-0 w-full flex",
+    base: "left-0 top-0 w-full",
+    motionContainer: "md:fixed top-0 left-0 w-full flex",
     nav: "hidden group/nav md:flex gap-6",
   },
 });
@@ -104,10 +105,18 @@ export const Header = (props: HeaderProps) => {
 
   const { base, motionContainer, nav } = styles();
   const headerClassName = base({
-    className: articleModalExpanded ? "z-[70]" : articleModalOpen ? "z-30" : "z-50",
+    className: cn(
+      articleModalExpanded ? "fixed" : "absolute",
+      articleModalExpanded
+        ? Z_INDEX_CLASS.headerOverModal
+        : articleModalOpen
+          ? Z_INDEX_CLASS.headerUnderModal
+          : Z_INDEX_CLASS.pageChrome,
+    ),
   });
 
   const revealState = hidden ? "hidden" : "visible";
+  const useInverseNav = isArticleRoute || articleModalExpanded;
   const navRevealState = articleModalExpanded && articleModalScrolled ? "hidden" : "visible";
   const navAnimationState = articleModalExpanded
     ? navRevealState
@@ -135,32 +144,40 @@ export const Header = (props: HeaderProps) => {
             variants={navRevealVariants}
             style={{ pointerEvents: navAnimationState === "hidden" ? "none" : "auto" }}
           >
-            <Popover.Root open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
-              <Popover.Trigger asChild>
-                <button
-                  className="inline-flex items-center justify-center p-3 text-page-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-page-foreground md:hidden"
-                  type="button"
-                  aria-label="Open navigation menu"
-                >
-                  <Menu aria-hidden="true" size={24} strokeWidth={2.5} />
-                </button>
-              </Popover.Trigger>
-              <Popover.Portal>
-                <Popover.Content
-                  align="end"
-                  sideOffset={10}
-                  className="z-[80] w-48 border-2 border-black bg-page-background px-4 py-3 text-page-foreground shadow-custom md:hidden"
-                  onClick={handleMobileNavClick}
-                >
-                  <ul className="flex flex-col gap-3 font-mono text-xs uppercase tracking-normal">
-                    {props.nav?.map((item: Navigation[number]) => (
-                      <NavItem key={item._key} {...item} />
-                    ))}
-                  </ul>
-                </Popover.Content>
-              </Popover.Portal>
-            </Popover.Root>
-            <ul className={cn(nav(), isArticleRoute || articleModalExpanded ? "text-white" : "")}>
+            {!articleModalOpen && (
+              <Popover.Root open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+                <Popover.Trigger asChild>
+                  <button
+                    className={cn(
+                      "tap-highlight-transparent inline-flex items-center justify-center p-3 text-page-foreground transition-transform hover:-translate-y-0.5 md:hidden cursor-pointer focus:outline-none focus:ring-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current focus-visible:ring-0 active:outline-none",
+                      useInverseNav ? "text-white" : "",
+                    )}
+                    type="button"
+                    aria-label="Open navigation menu"
+                  >
+                    <Menu aria-hidden="true" size={24} strokeWidth={2.5} />
+                  </button>
+                </Popover.Trigger>
+                <Popover.Portal>
+                  <Popover.Content
+                    align="end"
+                    sideOffset={10}
+                    className={cn(
+                      Z_INDEX_CLASS.popover,
+                      "w-48 border-2 border-black bg-page-background px-4 py-3 text-page-foreground shadow-custom md:hidden focus:outline-none focus:ring-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black focus-visible:ring-0",
+                    )}
+                    onClick={handleMobileNavClick}
+                  >
+                    <ul className="flex flex-col gap-3 font-mono text-xs uppercase tracking-normal">
+                      {props.nav?.map((item: Navigation[number]) => (
+                        <NavItem key={item._key} {...item} />
+                      ))}
+                    </ul>
+                  </Popover.Content>
+                </Popover.Portal>
+              </Popover.Root>
+            )}
+            <ul className={cn(nav(), useInverseNav ? "text-white" : "")}>
               {props.nav?.map((item: Navigation[number]) => (
                 <NavItem key={item._key} {...item} />
               ))}

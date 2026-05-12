@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
+
 const modalDismissTransition = {
   duration: 0.45,
   ease: [0.22, 1, 0.36, 1],
@@ -18,7 +20,7 @@ export function ModalSlotPresence({ children }: { children: ReactNode }) {
       {modalSegment ? (
         <motion.div
           key={pathname}
-          className="fixed inset-0 z-40 pointer-events-none"
+          className={`${Z_INDEX_CLASS.modalSlot} pointer-events-none fixed inset-0`}
           exit={{ opacity: 0.999 }}
           transition={modalDismissTransition}
         >

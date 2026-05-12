@@ -6,7 +6,9 @@ import { Dialog } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 
 import { ArticleErrorFallback } from "@/app/components/ArticleErrorFallback";
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
 
+import { cn } from "@/ui/_lib/utils";
 import { Button } from "@/ui/atoms/Button";
 
 type ArticleModalErrorProps = {
@@ -42,8 +44,15 @@ export default function ArticleModalError({ error }: ArticleModalErrorProps) {
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[90vw] max-w-[720px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] border border-white/10 bg-page-background p-0 shadow-[0_24px_90px_rgba(0,0,0,0.35)] focus:outline-none">
+        <Dialog.Overlay
+          className={cn(Z_INDEX_CLASS.modalOverlay, "fixed inset-0 bg-black/50 backdrop-blur-sm")}
+        />
+        <Dialog.Content
+          className={cn(
+            Z_INDEX_CLASS.modalContent,
+            "fixed left-1/2 top-1/2 w-[90vw] max-w-[720px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] border border-white/10 bg-page-background p-0 shadow-[0_24px_90px_rgba(0,0,0,0.35)] focus:outline-none",
+          )}
+        >
           <Dialog.Title className="sr-only">Article loading error</Dialog.Title>
           <ArticleErrorFallback className="min-h-[420px]" onGoHome={goHome} />
           <Dialog.Close asChild>

@@ -26,6 +26,10 @@ export default async function ArticleModal({ params }: { params: Promise<{ slug:
 
 async function ArticleModalContent({ slug }: { slug: string }) {
   const article = await getArticlePageData(slug);
+  const unlockStorageKey = getArticleUnlockStorageKey({
+    pixelTitle: article.pixel?.title,
+    slug,
+  });
 
   return (
     <Modal
@@ -34,10 +38,7 @@ async function ArticleModalContent({ slug }: { slug: string }) {
         article.isPrivate
           ? {
               pixelTitle: article.pixel?.title ?? undefined,
-              storageKey: getArticleUnlockStorageKey({
-                pixelTitle: article.pixel?.title,
-                slug,
-              }),
+              storageKey: unlockStorageKey,
               title: article.gateTitle ?? undefined,
             }
           : undefined
@@ -52,6 +53,8 @@ async function ArticleModalContent({ slug }: { slug: string }) {
         excerpt={article.excerpt}
         category={article.category}
         pixel={article.pixel}
+        isPrivate={article.isPrivate}
+        unlockStorageKey={unlockStorageKey}
         tagSections={article.tagSections ?? []}
         contentSections={article.contentSections ?? []}
         modalPreview

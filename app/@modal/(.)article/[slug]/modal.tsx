@@ -5,13 +5,14 @@ import { Maximize2, Minimize2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { Dialog } from "radix-ui";
-import type { PointerEvent, UIEvent } from "react";
+import type { CSSProperties, PointerEvent, UIEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Drawer } from "vaul";
 
 import { useAppUi } from "@/app/components/AppUiContext";
 import { type ArticleGateConfig, ArticleModalGate } from "@/app/components/ArticleModalGate";
 import { getArticleShellLayoutId } from "@/app/constants/motion";
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
 import { getScrollRevealState } from "@/app/utils/scroll";
 
 import { cn, tv } from "@/ui/_lib/utils";
@@ -20,14 +21,11 @@ import { useMediaQuery } from "@/ui/hooks/useMediaQuery";
 
 const styles = tv({
   slots: {
-    articleOverlay: "cursor-zoom-out fixed inset-0 z-40 bg-black/50 backdrop-blur-sm",
-    articleDialog:
-      "fixed left-1/2 top-1/2 z-50 aspect-[16/9] h-auto w-[90vw] max-w-[1400px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] border border-white/10 bg-black p-0 shadow-[0_24px_90px_rgba(0,0,0,0.35)] focus:outline-none",
-    articleDrawer:
-      "fixed inset-x-0 bottom-0 z-50 h-[92dvh] overflow-hidden rounded-t-[2rem] d bg-black p-0 shadow-[0_24px_90px_rgba(0,0,0,0.35)] focus:outline-none",
+    articleOverlay: `cursor-zoom-out fixed inset-0 ${Z_INDEX_CLASS.modalOverlay} bg-black/50 backdrop-blur-sm`,
+    articleDialog: `fixed left-1/2 top-1/2 ${Z_INDEX_CLASS.modalContent} aspect-[16/9] h-auto w-[90vw] max-w-[1400px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] border border-white/10 bg-black p-0 shadow-[0_24px_90px_rgba(0,0,0,0.35)] focus:outline-none`,
+    articleDrawer: `fixed inset-x-0 bottom-0 ${Z_INDEX_CLASS.modalContent} overflow-hidden rounded-t-[2rem] bg-black p-0 shadow-[0_24px_90px_rgba(0,0,0,0.35)] focus:outline-none`,
     articleShell: "relative h-full overflow-hidden",
-    articleControls:
-      "absolute right-4 top-4 grid size-12 place-items-center gap-4 text-white md:right-7 md:top-7 z-50",
+    articleControls: `pointer-events-auto right-4 top-4 ${Z_INDEX_CLASS.modalControls} grid size-12 place-items-center gap-4 text-white`,
   },
 });
 
@@ -43,6 +41,7 @@ export function Modal({ children, gate, slug }: ModalProps) {
   const isTabletOrMobile = useMediaQuery("(max-width: 1023px)");
   const [expanded, setExpanded] = useState(false);
   const [gateUnlocked, setGateUnlocked] = useState(false);
+  const [drawerHeight, setDrawerHeight] = useState<number | null>(null);
   const [drawerScrollTop, setDrawerScrollTop] = useState(0);
   const [, setDrawerBodyOffset] = useState(0);
   const previousLogoTabHoverRequestId = useRef(logoTabHoverRequestId);
@@ -54,19 +53,61 @@ export function Modal({ children, gate, slug }: ModalProps) {
 
   const { articleControls, articleShell, articleDialog, articleDrawer, articleOverlay } = styles();
   const modalClassName = expanded
-    ? "fixed inset-0 z-50 overflow-hidden rounded-none border-0 bg-black p-0 shadow-none focus:outline-none"
+    ? cn(
+        "fixed inset-0 overflow-hidden rounded-none border-0 bg-black p-0 shadow-none focus:outline-none",
+        Z_INDEX_CLASS.fullscreenModal,
+      )
     : isTabletOrMobile
       ? articleDrawer()
       : articleDialog();
-  const overlayClassName = expanded ? "fixed inset-0 z-40 bg-transparent" : articleOverlay();
+  const overlayClassName = expanded
+    ? cn("fixed inset-0 bg-transparent", Z_INDEX_CLASS.modalOverlay)
+    : articleOverlay();
+  const modalStyle =
+    isTabletOrMobile && !expanded && drawerHeight
+      ? ({ height: `${drawerHeight}px` } satisfies CSSProperties)
+      : undefined;
 
   useEffect(() => {
-    const { overflow } = document.body.style;
+    if (!isTabletOrMobile || expanded) {
+      setDrawerHeight(null);
+      return;
+    }
 
-    document.body.style.overflow = "hidden";
+    setDrawerHeight(Math.round(window.innerHeight * 0.92));
+  }, [expanded, isTabletOrMobile]);
+
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    const bodyStyle = document.body.style;
+    const htmlStyle = document.documentElement.style;
+    const previousBodyStyles = {
+      left: bodyStyle.left,
+      overflow: bodyStyle.overflow,
+      position: bodyStyle.position,
+      right: bodyStyle.right,
+      top: bodyStyle.top,
+      width: bodyStyle.width,
+    };
+    const previousHtmlOverflow = htmlStyle.overflow;
+
+    htmlStyle.overflow = "hidden";
+    bodyStyle.overflow = "hidden";
+    bodyStyle.position = "fixed";
+    bodyStyle.top = `-${scrollY}px`;
+    bodyStyle.left = "0";
+    bodyStyle.right = "0";
+    bodyStyle.width = "100%";
 
     return () => {
-      document.body.style.overflow = overflow;
+      htmlStyle.overflow = previousHtmlOverflow;
+      bodyStyle.overflow = previousBodyStyles.overflow;
+      bodyStyle.position = previousBodyStyles.position;
+      bodyStyle.top = previousBodyStyles.top;
+      bodyStyle.left = previousBodyStyles.left;
+      bodyStyle.right = previousBodyStyles.right;
+      bodyStyle.width = previousBodyStyles.width;
+      window.scrollTo(0, scrollY);
     };
   }, []);
 
@@ -152,13 +193,40 @@ export function Modal({ children, gate, slug }: ModalProps) {
   const drawerHandleOverBody =
     drawerScrollTop >= (scrollContainerRef.current?.clientHeight ?? Number.POSITIVE_INFINITY);
 
+  const articleControlsElement = (
+    <motion.div
+      className={cn(articleControls(), expanded ? "fixed" : "absolute")}
+      onPointerDown={stopDrawerControlPointerDown}
+    >
+      {gate && !gateUnlocked ? (
+        <LockClosedIcon className="size-5 transition-transform group-hover:scale-110" />
+      ) : (
+        <Button
+          variant="ghost"
+          className="bg-black/60"
+          iconOnly={
+            expanded ? (
+              <Minimize2 className="size-5 transition-transform hover:scale-110" />
+            ) : (
+              <Maximize2 className="size-5 transition-transform hover:scale-110" />
+            )
+          }
+          aria-label={
+            expanded ? "Minimize article to modal preview" : "Expand article modal to full screen"
+          }
+          onClick={expanded ? onMinimize : onExpand}
+        />
+      )}
+    </motion.div>
+  );
+
   const articleContent = (
     <>
       <motion.div
         className={articleShell()}
         transition={{ type: "spring", stiffness: 260, damping: 28 }}
       >
-        {gate ? (
+        {gate && !gateUnlocked ? (
           <ArticleModalGate
             pixelTitle={gate.pixelTitle}
             storageKey={gate.storageKey}
@@ -168,41 +236,26 @@ export function Modal({ children, gate, slug }: ModalProps) {
         ) : null}
         <div
           ref={scrollContainerRef}
-          className={gate && !gateUnlocked ? "h-full overflow-hidden" : "h-full overflow-y-auto"}
+          className={
+            gate && !gateUnlocked ? "h-full overflow-hidden bg-black" : "h-full overflow-y-auto"
+          }
           onScroll={onArticleScroll}
         >
           {children}
         </div>
       </motion.div>
-      <motion.div className={articleControls()} onPointerDown={stopDrawerControlPointerDown}>
-        {gate && !gateUnlocked ? (
-          <LockClosedIcon className="size-5 transition-transform group-hover:scale-110" />
-        ) : (
-          <Button
-            variant="ghost"
-            className="bg-black/60"
-            iconOnly={
-              expanded ? (
-                <Minimize2 className="size-5 transition-transform hover:scale-110" />
-              ) : (
-                <Maximize2 className="size-5 transition-transform hover:scale-110" />
-              )
-            }
-            aria-label={
-              expanded ? "Minimize article to modal preview" : "Expand article modal to full screen"
-            }
-            onClick={expanded ? onMinimize : onExpand}
-          />
-        )}
-      </motion.div>
+      {!expanded ? articleControlsElement : null}
     </>
   );
 
   if (isTabletOrMobile && !expanded) {
     return (
       <Drawer.Root
+        fixed
         modal
         open
+        preventScrollRestoration
+        repositionInputs={false}
         onOpenChange={(open) => {
           if (!open) {
             onDismiss();
@@ -216,13 +269,15 @@ export function Modal({ children, gate, slug }: ModalProps) {
               className={modalClassName}
               layout
               layoutId={getArticleShellLayoutId(slug)}
+              style={modalStyle}
               transition={{ type: "spring", stiffness: 260, damping: 28 }}
             >
               <Drawer.Title className="sr-only">Article preview</Drawer.Title>
               <Drawer.Description className="sr-only">Article modal</Drawer.Description>
               <motion.div
                 className={cn(
-                  "absolute inset-x-0 top-0 z-40 flex items-start justify-center h-editorial",
+                  Z_INDEX_CLASS.modalOverlay,
+                  "absolute inset-x-0 top-0 flex h-editorial items-start justify-center",
                   // drawerHandleOverBody && "bg-white",
                 )}
                 animate={{
@@ -262,6 +317,7 @@ export function Modal({ children, gate, slug }: ModalProps) {
             className={modalClassName}
             layout
             layoutId={getArticleShellLayoutId(slug)}
+            style={modalStyle}
             transition={{ type: "spring", stiffness: 260, damping: 28 }}
           >
             <Dialog.Title className="sr-only">
@@ -271,6 +327,7 @@ export function Modal({ children, gate, slug }: ModalProps) {
             {articleContent}
           </motion.div>
         </Dialog.Content>
+        {expanded ? articleControlsElement : null}
       </Dialog.Portal>
     </Dialog.Root>
   );

@@ -1,11 +1,12 @@
 "use client";
 
-import { EyeClosedIcon, EyeIcon } from "lucide-react";
+import { EyeClosedIcon, EyeIcon, Unlock } from "lucide-react";
 import { unstable_PasswordToggleField as PasswordToggleField } from "radix-ui";
 import type { CSSProperties, FormEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useAppUi } from "@/app/components/AppUiContext";
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
 
 import { tv } from "@/ui/_lib/utils";
 import { Button } from "@/ui/atoms/Button";
@@ -13,12 +14,10 @@ import { Text } from "@/ui/atoms/Text";
 
 const styles = tv({
   slots: {
-    gateBase:
-      "absolute inset-0 z-30 flex h-full items-center justify-center px-6 py-16 pointer-events-none",
+    gateBase: `absolute inset-0 ${Z_INDEX_CLASS.gate} flex h-full min-h-0 items-center justify-center overflow-y-auto overscroll-contain px-6 py-12 pointer-events-none max-md:px-5 max-md:py-8`,
     gateOverlay:
       "absolute inset-0 bg-black/80 backdrop-blur-sm pointer-events-none transition-[mask-image] duration-150",
-    gateWrapper:
-      "relative z-10 flex flex-col items-center gap-8 p-6 text-page-background pointer-events-auto",
+    gateWrapper: `relative ${Z_INDEX_CLASS.local} flex flex-col items-center gap-8 p-6 text-page-background pointer-events-auto max-w-md lg:max-w-xl text-center`,
     gateForm: "flex w-full max-w-[400px] flex-col items-center gap-6",
   },
 });
@@ -33,12 +32,7 @@ type ArticleModalGateProps = ArticleGateConfig & {
   onUnlock: () => void;
 };
 
-export function ArticleModalGate({
-  onUnlock,
-  pixelTitle,
-  storageKey,
-  title = "Locked article",
-}: ArticleModalGateProps) {
+export function ArticleModalGate({ onUnlock, pixelTitle, storageKey }: ArticleModalGateProps) {
   const { notifyArticleUnlocked, puzzleDialogOpen, puzzleSolved } = useAppUi();
   const [password, setPassword] = useState("");
   const [hasSolvedPuzzle, setHasSolvedPuzzle] = useState(false);
@@ -174,12 +168,12 @@ export function ArticleModalGate({
       />
       <div ref={wrapperRef} className={gateWrapper()}>
         <Text as="h1" styleType="heading-xl">
-          {title}
+          Access Denied
         </Text>
-        <Text as="p" styleType="body-md" className="md:hidden text-center">
-          Open on desktop to reveal the hidden puzzle, or enter password here...
+        <Text as="p" styleType="body-md" className="md:hidden text-center font-mono text-white/60">
+          Open on desktop to reveal hidden puzzle or enter password
         </Text>
-        <Text as="p" styleType="body-md" className="max-md:hidden">
+        <Text as="p" styleType="body-md" className="max-md:hidden font-mono text-white/60">
           Enter password or look for the hidden puzzle 👀
         </Text>
         <form onSubmit={handleSubmit} className={gateForm()}>
@@ -189,14 +183,19 @@ export function ArticleModalGate({
                 placeholder="Password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                className="h-14 w-full rounded-full border border-white/15 bg-white/10 px-6 py-2 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl focus:outline-none"
+                className="h-14 w-full rounded-full border border-white/15 bg-white/10 px-6 py-2 text-base shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl focus:outline-none"
               />
               <PasswordToggleField.Toggle className="absolute right-6 top-1/2 -translate-y-1/2 cursor-pointer">
                 <PasswordToggleField.Slot visible={<EyeIcon />} hidden={<EyeClosedIcon />} />
               </PasswordToggleField.Toggle>
             </PasswordToggleField.Root>
           </div>
-          <Button type="submit" label="Unlock" variant="primary-inverse" />
+          <Button
+            type="submit"
+            label="Unlock"
+            variant="outline-inverse"
+            iconLeft={<Unlock size={16} />}
+          />
           {error ? <p className="text-sm text-red-400">{error}</p> : null}
         </form>
       </div>

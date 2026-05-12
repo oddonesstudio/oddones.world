@@ -39,9 +39,9 @@ export function ArticleErrorFallback({
 
   return (
     <section
-      className={`flex min-h-[60vh] w-full items-center justify-center bg-page-background px-6 py-20 text-black ${className}`}
+      className={`flex h-screen w-full items-center justify-center bg-page-background px-6 py-20 text-black ${className}`}
     >
-      <div className="flex w-full max-w-[520px] flex-col items-center gap-6 text-center">
+      <div className="flex w-full max-w-130 flex-col items-center gap-6 text-center">
         <div className="flex flex-col gap-3">
           <Text as="h1" styleType="body-lg">
             {resolvedTitle}
