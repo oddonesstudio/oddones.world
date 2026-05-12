@@ -14,6 +14,7 @@ function getTagsForDocument(body: SanityWebhookPayload | null) {
     case "article":
       tags.add("sanity:article");
       tags.add("sanity:home");
+      tags.add("sanity:sitemap");
       if (body.slug) {
         tags.add(`sanity:article:${body.slug}`);
         tags.add(`sanity:metadata:${body.slug}`);
@@ -21,6 +22,7 @@ function getTagsForDocument(body: SanityWebhookPayload | null) {
       break;
     case "page":
       tags.add("sanity:seo");
+      tags.add("sanity:sitemap");
       if (body.slug === "/") {
         tags.add("sanity:home");
       }
