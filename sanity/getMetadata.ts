@@ -1,16 +1,21 @@
+import type { Metadata } from "next";
+
 import { sanityFetch } from "./live";
 
 interface MetadataProps {
+  path?: string;
   slug?: string;
 }
 
 type MetadataQueryResult = {
   content?: {
     _type?: string;
+    isPrivate?: boolean;
     title?: string;
     seo?: {
       title?: string;
       description?: string;
+      keywords?: string[];
       ogImage?: string;
       canonicalUrl?: string;
     };
@@ -19,19 +24,65 @@ type MetadataQueryResult = {
   global?: {
     defaultTitle?: string;
     defaultDescription?: string;
+    defaultKeywords?: string[];
     ogImage?: string;
     defaultCanonicalUrl?: string;
   } | null;
 };
 
-export async function getMetadata({ slug }: MetadataProps = {}) {
+const trimTrailingSlash = (value: string) => value.replace(/\/+$/, "");
+
+const normalizePath = (path?: string) => {
+  if (!path || path === "/") {
+    return "/";
+  }
+
+  return path.startsWith("/") ? path : `/${path}`;
+};
+
+const getSiteUrl = (defaultCanonicalUrl?: string) => {
+  const rawUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined) ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+    defaultCanonicalUrl;
+
+  if (!rawUrl) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(rawUrl);
+    return trimTrailingSlash(url.origin);
+  } catch {
+    return undefined;
+  }
+};
+
+const resolveAbsoluteUrl = (urlOrPath: string, siteUrl?: string) => {
+  try {
+    return new URL(urlOrPath).toString();
+  } catch {
+    if (!siteUrl) {
+      return urlOrPath;
+    }
+
+    return new URL(urlOrPath, siteUrl).toString();
+  }
+};
+
+export async function getMetadata({ path, slug }: MetadataProps = {}): Promise<Metadata> {
   const contentQuery = slug
     ? `*[_type in ["page", "article"] && slug.current == $slug][0]{
         _type,
+        isPrivate,
         title,
         seo {
           title,
           description,
+          keywords,
           "ogImage": ogImage.asset->url,
           canonicalUrl
         },
@@ -48,6 +99,7 @@ export async function getMetadata({ slug }: MetadataProps = {}) {
     "global": *[_id == "seoSettings"][0]{
       defaultTitle,
       defaultDescription,
+      defaultKeywords,
       "ogImage": defaultOgImage.asset->url,
       defaultCanonicalUrl
     }
@@ -69,15 +121,26 @@ export async function getMetadata({ slug }: MetadataProps = {}) {
   const description = content?.seo?.description || global?.defaultDescription;
   const ogImage =
     content?.seo?.ogImage || content?.coverImage || global?.ogImage || "/og-default.jpg";
-  const canonical = content?.seo?.canonicalUrl || global?.defaultCanonicalUrl;
+  const keywords = content?.seo?.keywords?.length
+    ? content.seo.keywords
+    : global?.defaultKeywords;
+  const siteUrl = getSiteUrl(global?.defaultCanonicalUrl);
+  const routePath = normalizePath(path ?? (slug === "/" ? "/" : slug));
+  const canonical =
+    content?.seo?.canonicalUrl ||
+    (siteUrl && path !== undefined ? resolveAbsoluteUrl(routePath, siteUrl) : undefined);
+  const resolvedOgImage = resolveAbsoluteUrl(ogImage, siteUrl);
+  const isPrivate = content?._type === "article" && content.isPrivate === true;
 
   return {
+    metadataBase: siteUrl ? new URL(siteUrl) : undefined,
     title,
     description,
+    keywords,
     openGraph: {
       title,
       description,
-      images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      images: resolvedOgImage ? [{ url: resolvedOgImage, width: 1200, height: 630 }] : [],
       url: canonical,
       siteName: "Odd Ones",
       locale: "en_GB",
@@ -87,9 +150,23 @@ export async function getMetadata({ slug }: MetadataProps = {}) {
       card: "summary_large_image",
       title,
       description,
-      images: ogImage ? [ogImage] : [],
+      images: resolvedOgImage ? [resolvedOgImage] : [],
     },
     alternates: { canonical },
+    robots: isPrivate
+      ? {
+          index: false,
+          follow: false,
+          googleBot: {
+            index: false,
+            follow: false,
+            noarchive: true,
+          },
+        }
+      : {
+          index: true,
+          follow: true,
+        },
     icons: {
       icon: "/favicon.ico",
       apple: "/apple-touch-icon.png",

@@ -7,11 +7,23 @@ import { getArticleTextLayoutId } from "@/app/constants/motion";
 import { ArticleLayout } from "@/app/layouts/ArticleLayout";
 import { getArticleUnlockStorageKey } from "@/app/utils/puzzle";
 
+import { getMetadata } from "@/sanity/getMetadata";
+
 import { ArticleGateShell } from "./ArticleGateShell";
 
 export const dynamic = "force-dynamic";
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+type ArticleRouteProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: ArticleRouteProps) {
+  const { slug } = await params;
+
+  return getMetadata({ path: `/article/${slug}`, slug });
+}
+
+export default async function ArticlePage({ params }: ArticleRouteProps) {
   const { slug } = await params;
 
   return (
@@ -25,6 +37,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
 async function ArticleContent({ slug }: { slug: string }) {
   const article = await getArticlePageData(slug);
+  const unlockStorageKey = getArticleUnlockStorageKey({
+    pixelTitle: article.pixel?.title,
+    slug,
+  });
 
   return (
     <ArticleGateShell
@@ -32,10 +48,7 @@ async function ArticleContent({ slug }: { slug: string }) {
         article.isPrivate
           ? {
               pixelTitle: article.pixel?.title ?? undefined,
-              storageKey: getArticleUnlockStorageKey({
-                pixelTitle: article.pixel?.title,
-                slug,
-              }),
+              storageKey: unlockStorageKey,
               title: article.gateTitle ?? undefined,
             }
           : undefined
@@ -50,6 +63,8 @@ async function ArticleContent({ slug }: { slug: string }) {
         excerpt={article.excerpt}
         category={article.category}
         pixel={article.pixel}
+        isPrivate={article.isPrivate}
+        unlockStorageKey={unlockStorageKey}
         tagSections={article.tagSections ?? undefined}
         contentSections={article.contentSections ?? undefined}
         primaryCTA={article.primaryCTA}

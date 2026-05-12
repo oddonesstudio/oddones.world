@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 
 import { resolveButtonHref } from "@/app/utils/resolveButtonHref";
 
+import { getMetadata } from "@/sanity/getMetadata";
 import { sanityFetch } from "@/sanity/live";
 
 import { homePageQuery } from "@/studio/queries/groq";
@@ -10,6 +11,10 @@ import type { HomePageQueryResult } from "@/studio/sanity.types";
 
 import { FeaturedArticlePortal } from "@/ui/components/FeaturedArticlePortal";
 import { Hero } from "@/ui/content-sections/Hero";
+
+export async function generateMetadata() {
+  return getMetadata({ path: "/", slug: "/" });
+}
 
 export default async function Home() {
   const { data: page } = await sanityFetch<HomePageQueryResult>({
