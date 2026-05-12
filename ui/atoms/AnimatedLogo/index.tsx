@@ -2,12 +2,16 @@
 
 import { motion } from "framer-motion";
 
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
 import { Logo } from "@/ui/_assets/Logo";
 import { cn } from "@/ui/_lib/utils";
 
 export const AnimatedLogo = () => (
   <motion.div
-    className={cn("absolute top-1/2 left-1/2 -translate-1/2 z-1 bg-page-background p-1 pb-2")}
+    className={cn(
+      Z_INDEX_CLASS.localBase,
+      "absolute top-1/2 left-1/2 -translate-1/2 bg-page-background p-1 pb-2",
+    )}
     initial="start"
     animate="animate"
     variants={{

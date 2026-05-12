@@ -3,12 +3,18 @@
 import { animate, motion, useMotionValue, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
 import { Text } from "@/ui/atoms/Text";
 import { AnimatedLogo } from "../atoms/AnimatedLogo";
 
 type WavyFooterProps = {
   copyright?: string | null;
 };
+
+const MAX_SCROLL_FOOTER_SCALE = 0.5;
+const TRANSITION_DELAY_SECONDS = 1;
+const TRANSITION_DURATION_SECONDS = 1;
+const SAFARI_GAP_COVER_EXIT_LEAD_SECONDS = 0.18;
 
 const getCopyrightText = (copyright?: string | null) => {
   const year = new Date().getFullYear().toString();
@@ -21,14 +27,25 @@ const getCopyrightText = (copyright?: string | null) => {
   return `${text} ${year}.`;
 };
 
+const getScrollFooterScale = () => {
+  if (typeof document === "undefined") return 0;
+
+  const doc = document.documentElement;
+  const bottomOffset = doc.scrollHeight - doc.clientHeight - doc.scrollTop;
+  const revealDistance = doc.clientHeight * MAX_SCROLL_FOOTER_SCALE;
+  const revealProgress = (revealDistance - bottomOffset) / revealDistance;
+
+  return Math.max(0, Math.min(MAX_SCROLL_FOOTER_SCALE, revealProgress * MAX_SCROLL_FOOTER_SCALE));
+};
+
 export const WavyFooter = ({ copyright }: WavyFooterProps) => {
   const { scrollYProgress } = useScroll();
   const translateX = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
-  const scrollScale = useTransform(scrollYProgress, [0.5, 1], [0, 0.5]);
   const scaleY = useMotionValue(0);
-  const footerHeight = useTransform(scaleY, (value) => `${Math.max(value, 0) * 100}vh`);
+  const footerHeight = useTransform(scaleY, (value) => `${Math.max(value, 0) * 100}dvh`);
   const copyrightText = getCopyrightText(copyright);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const [showSafariGapCover, setShowSafariGapCover] = useState(true);
   const [canScroll, setCanScroll] = useState(false);
   const [showCopyright, setShowCopyright] = useState(false);
 
@@ -59,10 +76,17 @@ export const WavyFooter = ({ copyright }: WavyFooterProps) => {
   useEffect(() => {
     if (isTransitioning || !canScroll) return;
 
-    scaleY.set(scrollScale.get());
-    const unsubscribe = scrollScale.on("change", (value) => scaleY.set(value));
-    return () => unsubscribe();
-  }, [canScroll, isTransitioning, scaleY, scrollScale]);
+    const updateFooterScale = () => scaleY.set(getScrollFooterScale());
+
+    updateFooterScale();
+    const unsubscribe = scrollYProgress.on("change", updateFooterScale);
+    window.addEventListener("resize", updateFooterScale);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener("resize", updateFooterScale);
+    };
+  }, [canScroll, isTransitioning, scaleY, scrollYProgress]);
 
   useEffect(() => {
     if (!canScroll && !isTransitioning) {
@@ -73,24 +97,36 @@ export const WavyFooter = ({ copyright }: WavyFooterProps) => {
   useEffect(() => {
     setShowCopyright(false);
     setIsTransitioning(true);
+    setShowSafariGapCover(true);
     scaleY.set(2);
 
+    const gapCoverExitTimer = window.setTimeout(
+      () => setShowSafariGapCover(false),
+      (TRANSITION_DELAY_SECONDS +
+        TRANSITION_DURATION_SECONDS -
+        SAFARI_GAP_COVER_EXIT_LEAD_SECONDS) *
+        1000,
+    );
+
     const controls = animate(scaleY, 0, {
-      duration: 1,
-      delay: 1,
+      duration: TRANSITION_DURATION_SECONDS,
+      delay: TRANSITION_DELAY_SECONDS,
       ease: "easeInOut",
       onComplete: () => {
         setIsTransitioning(false);
         if (canScroll) {
-          scaleY.set(scrollScale.get());
+          scaleY.set(getScrollFooterScale());
         } else {
           scaleY.set(0);
         }
       },
     });
 
-    return () => controls.stop();
-  }, [canScroll, scaleY, scrollScale]);
+    return () => {
+      window.clearTimeout(gapCoverExitTimer);
+      controls.stop();
+    };
+  }, [canScroll, scaleY]);
 
   useEffect(() => {
     if (isTransitioning || !canScroll) {
@@ -118,7 +154,16 @@ export const WavyFooter = ({ copyright }: WavyFooterProps) => {
   }, [canScroll, isTransitioning, scrollYProgress]);
 
   return (
-    <footer className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+    <motion.footer
+      className={`${Z_INDEX_CLASS.pageChrome} pointer-events-none fixed inset-0 bottom-0 overflow-hidden`}
+    >
+      <motion.div
+        aria-hidden="true"
+        className="fixed inset-x-0 bottom-0 h-[max(4rem,env(safe-area-inset-bottom))] bg-black will-change-transform [transform:translate3d(0,0,0)]"
+        initial={false}
+        animate={{ y: showSafariGapCover ? 0 : "100%" }}
+        transition={{ duration: SAFARI_GAP_COVER_EXIT_LEAD_SECONDS, ease: "easeIn" }}
+      />
       <AnimatedLogo />
       <motion.svg
         id="svgWave"
@@ -129,10 +174,7 @@ export const WavyFooter = ({ copyright }: WavyFooterProps) => {
         viewBox="0 0 2048 44.4"
         preserveAspectRatio="none"
         style={{ translateX, scaleY, transformOrigin: "bottom", willChange: "transform" }}
-        className="absolute bottom-0 left-0 h-full w-[200%]"
-        initial={{ scaleY: 2 }}
-        animate={{ scaleY: 0 }}
-        transition={{ delay: 1, duration: 1, ease: "easeInOut" }}
+        className="absolute inset-x-0 bottom-0 h-full w-[200%]"
       >
         <title>Wavy Footer</title>
         <path d="M0,12 C128,9 256,9 384,12 S640,15 768,12 S1024,9 1152,12 S1408,15 1536,12 S1792,9 1920,12 C1984,13 2048,13 2048,13 L2048,44.4 L0,44.4 Z" />
@@ -146,12 +188,12 @@ export const WavyFooter = ({ copyright }: WavyFooterProps) => {
       >
         <Text
           as="p"
-          styleType="body-sm"
+          styleType="body-md"
           className="absolute right-8 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] text-white/70"
         >
           {copyrightText}
         </Text>
       </motion.div>
-    </footer>
+    </motion.footer>
   );
 };

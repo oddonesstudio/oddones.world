@@ -7,7 +7,7 @@ import { Text } from "../Text";
 
 const styles = tv({
   slots: {
-    base: "hover:underline",
+    base: "hover:underline [&_a]:focus:outline-none [&_a]:focus:ring-0 [&_a]:focus-visible:outline-2 [&_a]:focus-visible:outline-offset-2 [&_a]:focus-visible:outline-current [&_a]:focus-visible:ring-0",
   },
   variants: {
     isActive: {

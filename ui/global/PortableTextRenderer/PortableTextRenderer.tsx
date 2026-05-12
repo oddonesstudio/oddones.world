@@ -31,6 +31,7 @@ const PortableImage: PortableTextTypeComponent<PortableTextImage> = ({ value }) 
         src={urlFor(value).width(1600).url()}
         width={1600}
         height={900}
+        sizes="(min-width: 1024px) 500px, 100vw"
         alt={value.alt ?? "Article image"}
         className="border border-black/5 shadow-[0_18px_50px_rgba(0,0,0,0.12)]"
       />
@@ -78,7 +79,7 @@ const components: PortableTextComponents = {
         as="h2"
         id={getArticleHeadingId(value._key)}
         styleType="heading-lg"
-        className="mt-20 mb-6 scroll-mt-editorial text-black/80"
+        className="mb-12 not-first:mt-10 scroll-mt-editorial text-black/80"
       >
         {children}
       </Text>
@@ -87,8 +88,8 @@ const components: PortableTextComponents = {
       <Text
         as="h3"
         id={getArticleHeadingId(value._key)}
-        styleType="heading-lg"
-        className="md:not-first:mt-20 mb-6 scroll-mt-editorial text-black/80"
+        styleType="heading-md"
+        className="md:not-first:mt-10 mb-6 scroll-mt-editorial text-black/80"
       >
         {children}
       </Text>
@@ -99,7 +100,7 @@ const components: PortableTextComponents = {
       </Text>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-8 border-l-2 border-black/20 pl-5 italic text-body-md text-[#4a4a4a]">
+      <blockquote className="my-8 border-l-2 border-black/20 pl-5 italic text-body-md text-black/80 max-w-3xl">
         {children}
       </blockquote>
     ),
@@ -107,7 +108,7 @@ const components: PortableTextComponents = {
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="my-6 ml-5 list-disc space-y-3 text-body-md text-black/80 peer:mb-20">
+      <ul className="mb-10 ml-5 list-disc space-y-3 text-body-md text-black/80 peer:mb-20">
         {children}
       </ul>
     ),

@@ -11,11 +11,11 @@
   --page-foreground: #131313;
 
   --header-height: clamp(6.875rem, 5.833rem + 4.63vw, 10rem);
-  --footer-height: 50vh;
+  --footer-height: 50dvh;
 
   --left-right: clamp(1rem, -0.333rem + 5.926vw, 5rem);
   --top-bottom: clamp(3rem, 2.333rem + 2.963vw, 5rem);
-  --editorial: clamp(1.25rem, -1.667rem + 12.963vw, 10rem);
+  --editorial: clamp(1.25rem, -3.333rem + 20.37vw, 15rem);
 }
 
 @theme inline {
@@ -38,6 +38,8 @@ html {
 }
 
 body {
+  min-height: 100dvh;
+  background-color: black;
   font-family: var(--font-sans);
 }
 
@@ -48,6 +50,20 @@ body {
 
 .scrollbar-hidden::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
+}
+
+.tap-highlight-transparent {
+  -webkit-tap-highlight-color: rgb(0 0 0 / 0);
+}
+
+a,
+button,
+[role="button"],
+input,
+select,
+textarea,
+summary {
+  -webkit-tap-highlight-color: rgb(0 0 0 / 0);
 }
 
 @utility shadow-custom {

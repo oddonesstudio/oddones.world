@@ -4,13 +4,14 @@ import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import Image from "next/image";
 import { Accordion as RadixAccordion } from "radix-ui";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { AccordionItem as AccordionItemType, PortableTextValue } from "@/app/types/sanity";
 
 import { cn } from "@/ui/_lib/utils";
 import { Text } from "@/ui/atoms/Text";
 import { PortableTextRenderer } from "@/ui/global/PortableTextRenderer/PortableTextRenderer";
+import { useMediaQuery } from "@/ui/hooks/useMediaQuery";
 
 interface AccordionProps {
   heading?: string;
@@ -72,21 +73,7 @@ const desktopItemVariants: Variants = {
   },
 };
 
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY);
-    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
-
-    updateIsMobile();
-    mediaQuery.addEventListener("change", updateIsMobile);
-
-    return () => mediaQuery.removeEventListener("change", updateIsMobile);
-  }, []);
-
-  return isMobile;
-};
+const useIsMobile = () => useMediaQuery(MOBILE_MEDIA_QUERY);
 
 const contentVariants: Variants = {
   closed: {
@@ -156,8 +143,8 @@ export const Accordion = ({ heading, headingId, summaryText, items }: AccordionP
           {heading}
         </Text>
       )}
-      {summaryText && <PortableTextRenderer value={summaryText} />}
       <div className="flex flex-col gap-4">
+        {summaryText && <PortableTextRenderer value={summaryText} />}
         {items.map((item) => (
           <AccordionItem
             key={item._key}
@@ -189,9 +176,25 @@ const AccordionItem = ({
   onCloseImageComplete: () => void;
 }) => {
   const [isLayoutOpen, setIsLayoutOpen] = useState(isOpen);
+  const itemRef = useRef<HTMLDivElement>(null);
+  const wasOpenRef = useRef(isOpen);
   const isMobile = useIsMobile();
   const imageUrl = item.image?.asset?.url;
   const layoutState = isOpen && !isClosing && imageUrl ? "open" : "closed";
+
+  useEffect(() => {
+    if (isOpen && !wasOpenRef.current) {
+      const animationFrameId = window.requestAnimationFrame(() => {
+        itemRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      wasOpenRef.current = isOpen;
+
+      return () => window.cancelAnimationFrame(animationFrameId);
+    }
+
+    wasOpenRef.current = isOpen;
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -212,6 +215,7 @@ const AccordionItem = ({
   return (
     <RadixAccordion.Item value={item._key} asChild>
       <motion.div
+        ref={itemRef}
         className="grid gap-4 py-4 md:gap-x-8"
         animate={layoutState}
         variants={isMobile ? mobileItemVariants : desktopItemVariants}
@@ -230,6 +234,7 @@ const AccordionItem = ({
                 alt={String(item.title) ?? ""}
                 width={220}
                 height={220}
+                sizes="(max-width: 767px) 180px, min(28vw, 220px)"
                 className="h-full w-full object-contain"
               />
             </motion.div>
@@ -268,11 +273,7 @@ const AccordionItem = ({
                 variants={contentVariants}
                 transition={LAYOUT_TRANSITION}
               >
-                <motion.div
-                  className="pb-4"
-                  variants={contentInnerVariants}
-                  transition={LAYOUT_TRANSITION}
-                >
+                <motion.div variants={contentInnerVariants} transition={LAYOUT_TRANSITION}>
                   <PortableTextRenderer value={item.content} />
                 </motion.div>
               </motion.div>

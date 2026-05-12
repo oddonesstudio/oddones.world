@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useAppUi } from "@/app/components/AppUiContext";
 import { getArticleShellLayoutId, getArticleTextLayoutId } from "@/app/constants/motion";
-import { DOM_IDS } from "@/app/constants/ui";
+import { DOM_IDS, Z_INDEX_CLASS } from "@/app/constants/ui";
 import type { FeaturedArticle } from "@/app/types/sanity";
 import { getFeaturedArticleUnlockStorageKey } from "@/app/utils/puzzle";
 
@@ -44,6 +44,8 @@ export const FeaturedArticlePortal = ({ article }: FeaturedArticlePortalProps) =
 
   const coverImageUrl = article.coverImage?.asset?.url ?? null;
   const title = article.title ?? "Featured article";
+  const category = "categories" in article ? article.categories?.find((item) => item?.title) : null;
+  const categoryTitle = category?.title ?? "Featured article";
 
   const unlockStorageKey = getFeaturedArticleUnlockStorageKey(article);
   const [isUnlocked, setIsUnlocked] = useState(!article.isPrivate);
@@ -118,29 +120,25 @@ export const FeaturedArticlePortal = ({ article }: FeaturedArticlePortalProps) =
               variants={textContainerVariants}
               initial="hidden"
               animate={revealState}
-              className="absolute right-0 bottom-0 z-10 flex max-w-3xl flex-col items-end gap-3 p-6 pt-24 text-right text-white md:p-8 md:pt-32"
+              className={`${Z_INDEX_CLASS.local} absolute right-0 bottom-0 flex max-w-md md:max-w-2xl flex-col items-end gap-3 p-6 pt-24 text-right text-white md:p-8 md:pt-32`}
             >
-              <motion.p
-                variants={textItemVariants}
-                className="text-xs font-medium uppercase tracking-[0.22em] text-white/70"
-              >
-                Featured article
-              </motion.p>
-              {/* <motion.div variants={textItemVariants}> */}
+              <Text as="p" styleType="label-sm" className="text-white/70">
+                {categoryTitle}
+              </Text>
               <Text as="h2" styleType="heading-xl">
                 {title}
               </Text>
               {/* </motion.div> */}
               {article.excerpt && (
-                <motion.p
-                  variants={textItemVariants}
-                  className="max-w-2xl overflow-hidden [display:-webkit-box] text-sm leading-6 text-white/82 [-webkit-box-orient:vertical] [-webkit-line-clamp:3] md:text-base md:leading-7"
-                >
-                  {article.excerpt}
-                </motion.p>
-                // <Text as="p" styleType="body-md" className="line-clamp-3">
-                //   {article.excerpt}
-                // </Text>
+                <motion.div variants={textItemVariants}>
+                  <Text
+                    as="p"
+                    styleType="body-md"
+                    className="overflow-hidden text-white/70 line-clamp-3"
+                  >
+                    {article.excerpt}
+                  </Text>
+                </motion.div>
               )}
             </motion.div>
 
@@ -148,7 +146,7 @@ export const FeaturedArticlePortal = ({ article }: FeaturedArticlePortalProps) =
               variants={iconVariants}
               initial="hidden"
               animate={revealState}
-              className="absolute top-5 right-5 z-20 grid size-11 place-items-center rounded-full bg-black/25 text-white opacity-0 backdrop-blur-md transition-colors duration-300 group-hover:bg-black/45 group-hover:opacity-100 md:top-7 md:right-7 md:size-12"
+              className={`${Z_INDEX_CLASS.localOverlay} absolute top-5 right-5 grid size-11 place-items-center rounded-full bg-black/25 text-white opacity-0 backdrop-blur-md transition-colors duration-300 group-hover:bg-black/45 group-hover:opacity-100 md:top-7 md:right-7 md:size-12`}
               aria-hidden="true"
             >
               {showUnlocked ? (

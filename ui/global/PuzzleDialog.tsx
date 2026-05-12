@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { useAppUi } from "@/app/components/AppUiContext";
-import { STORAGE_KEYS } from "@/app/constants/ui";
+import { STORAGE_KEYS, Z_INDEX_CLASS } from "@/app/constants/ui";
 import {
   type Grid,
   type GridCell,
@@ -579,8 +579,18 @@ export const PuzzleDialog = ({
         </div>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-sm data-[state=open]:animate-overlayShow z-40" />
-        <Dialog.Content className="fixed left-1/2 overflow-clip top-1/2 -translate-x-1/2 -translate-y-1/2 bg-page-background rounded-3xl shadow-lg z-50">
+        <Dialog.Overlay
+          className={cn(
+            Z_INDEX_CLASS.modalOverlay,
+            "fixed inset-0 bg-black/80 backdrop-blur-sm data-[state=open]:animate-overlayShow",
+          )}
+        />
+        <Dialog.Content
+          className={cn(
+            Z_INDEX_CLASS.modalContent,
+            "fixed left-1/2 top-1/2 overflow-clip -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-page-background shadow-lg",
+          )}
+        >
           <Dialog.Description className="sr-only">Puzzle modal</Dialog.Description>
           <PuzzleDialogHeader complete={complete} title={title} />
           <Container className="overflow-y-scroll py-10 px-20! flex flex-col items-center gap-10">

@@ -2,7 +2,7 @@
 
 import { GitBranch } from "lucide-react";
 import type { ReactNode } from "react";
-
+import { Z_INDEX_CLASS } from "@/app/constants/ui";
 import { usePuzzleSolved } from "@/app/hooks/usePuzzleSolved";
 import type { FeaturedArticle, PixelPuzzle } from "@/app/types/sanity";
 
@@ -15,7 +15,7 @@ import { PuzzleDialog } from "@/ui/global/PuzzleDialog";
 
 const styles = tv({
   slots: {
-    base: "flex flex-col gap-10 md:gap-20 items-center justify-center",
+    base: "flex flex-col gap-16 items-center justify-center",
     heading: "flex flex-wrap justify-center items-center relative text-center",
   },
   variants: {
@@ -79,7 +79,7 @@ export const Hero = (props: HeroProps) => {
                   size={100}
                 />
               )}
-              <Text as="h1" className="z-10" styleType="display-xl">
+              <Text as="h1" className={Z_INDEX_CLASS.local} styleType="display-xl">
                 {splitHeading(heading).second}
               </Text>
             </>
@@ -90,31 +90,33 @@ export const Hero = (props: HeroProps) => {
           )}
         </div>
       </div>
-      {props.intro && (
-        <Text
-          as="p"
-          styleType="body-lg"
-          className="text-page-foreground/70 max-w-[80vw] md:max-w-200 text-center"
-        >
-          {props.intro}
-        </Text>
-      )}
-      {(primaryCTA?.label || secondaryCTA?.label) && (
-        <div className="flex max-md:flex-col gap-5">
-          {primaryCTA?.label && (
-            <Button label={primaryCTA.label} href={primaryCTA.href} action={primaryCTA.action} />
-          )}
-          {secondaryCTA?.label && (
-            <Button
-              label={secondaryCTA.label}
-              variant="secondary"
-              href={secondaryCTA.href}
-              action={secondaryCTA.action}
-              iconRight={<GitBranch size={18} strokeWidth={1.75} />}
-            />
-          )}
-        </div>
-      )}
+      <div className="flex flex-col gap-10 lg:gap-20 items-center">
+        {props.intro && (
+          <Text
+            as="p"
+            styleType="body-lg"
+            className="text-page-foreground/70 max-w-sm lg:max-w-2xl text-center"
+          >
+            {props.intro}
+          </Text>
+        )}
+        {(primaryCTA?.label || secondaryCTA?.label) && (
+          <div className="flex max-md:flex-col gap-5">
+            {primaryCTA?.label && (
+              <Button label={primaryCTA.label} href={primaryCTA.href} action={primaryCTA.action} />
+            )}
+            {secondaryCTA?.label && (
+              <Button
+                label={secondaryCTA.label}
+                variant="secondary"
+                href={secondaryCTA.href}
+                action={secondaryCTA.action}
+                iconRight={<GitBranch size={18} strokeWidth={1.75} />}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </Container>
   );
 };

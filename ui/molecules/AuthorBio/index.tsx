@@ -13,18 +13,14 @@ export const AuthorBio = (props: {
   socialLinks?: SocialLink[];
 }) => {
   return (
-    <div className="rounded-sm flex flex-col gap-6 md:gap-10 w-full">
-      <div className="flex gap-6 items-center">
+    <div className="rounded-sm flex flex-col gap-6 w-full">
+      <div className="flex gap-4 items-center">
         {props.avatar && (
-          <Image
-            src={props.avatar}
-            alt="Author"
-            width={50}
-            height={50}
-            className="object-cover rounded-full size-[50px]"
-          />
+          <div className="relative size-[60px]">
+            <Image src={props.avatar} alt="Author" fill sizes="60px" className="object-cover rounded-full" />
+          </div>
         )}
-        <Text as="h2" styleType="label-md">
+        <Text as="p" styleType="body-md">
           {props.name}
         </Text>
       </div>
