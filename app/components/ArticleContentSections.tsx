@@ -1,6 +1,7 @@
 import type { ArticleContentSection } from "@/app/types/sanity";
 
 import { Accordion } from "@/ui/content-sections/Accordion";
+import { ArticleGallery } from "@/ui/content-sections/StudioCarousel";
 
 interface ArticlePageSectionsProps {
   getSectionHeadingId?: (key: string) => string;
@@ -25,6 +26,17 @@ export const ArticleContentSections = ({
                 items={section.items ?? []}
               />
             );
+          case "gallery": {
+            return (
+              <ArticleGallery
+                key={section._id}
+                heading={section.heading ?? undefined}
+                headingId={getSectionHeadingId?.(section._id)}
+                summaryText={section.summaryText ?? undefined}
+                items={section.items ?? []}
+              />
+            );
+          }
           default:
             return null;
         }

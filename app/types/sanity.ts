@@ -41,13 +41,19 @@ export type Accordion = Extract<
   { _type: "accordion" }
 >;
 
-export type ArticleContentSection = NonNullable<ArticleQueryData["contentSections"]>[number];
+export type Gallery = Extract<
+  NonNullable<ArticleQueryData["contentSections"]>[number],
+  { _type: "gallery" }
+>;
+
 export type AccordionItem = NonNullable<Accordion["items"]>[number];
+export type ArticleContentSection = NonNullable<ArticleQueryData["contentSections"]>[number];
+export type ArticleCTA = Exclude<ArticleQueryData["primaryCTA"], null>;
 export type ArticlePortableText = NonNullable<ArticleQueryData["body"]>;
 export type AccordionPortableText = NonNullable<AccordionItem["content"]>;
-export type PortableTextValue = ArticlePortableText | AccordionPortableText;
-export type ArticleCTA = Exclude<ArticleQueryData["primaryCTA"], null>;
+export type GalleryItem = NonNullable<Gallery["items"]>[number];
 export type HeaderCTA = Exclude<SiteSettingsData["headerCTA"], null>;
+export type PortableTextValue = ArticlePortableText | AccordionPortableText;
 export type Navigation = Exclude<SiteSettingsData["navigation"], null>;
 
 // Full result types for pages

@@ -7,7 +7,11 @@ export type ButtonHrefSource = {
   anchor?: string | null;
   externalURL?: string | null;
   contact?: string | null;
-  download?: string | null;
+  download?: {
+    asset: {
+      url?: string | null;
+    } | null;
+  } | null;
 };
 
 const normalizePageSlug = (slug: string) => {
@@ -35,6 +39,10 @@ const normalizeContact = (contact: string) => {
   return contact.includes("@") ? `mailto:${contact}` : contact;
 };
 
+const normalizeDownload = (download: string) => {
+  return download.trim() || undefined;
+};
+
 export const resolveButtonHref = (source?: ButtonHrefSource | null) => {
   if (!source) {
     return undefined;
@@ -48,7 +56,7 @@ export const resolveButtonHref = (source?: ButtonHrefSource | null) => {
     case "contact":
       return source.contact ? normalizeContact(source.contact) : "mailto:soph@oddones.world";
     case "download":
-      return source.download ?? undefined;
+      return source.download?.asset?.url ? normalizeDownload(source.download.asset.url) : undefined;
     case "internal":
       break;
     default:

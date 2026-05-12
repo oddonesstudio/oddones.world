@@ -26,6 +26,7 @@ export default defineType({
       name: "avatar",
       title: "Avatar",
       type: "image",
+      options: { hotspot: true },
     }),
     defineField({
       name: "socialLinks",

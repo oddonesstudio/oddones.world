@@ -32,6 +32,20 @@ export const Secondary: Story = {
   },
 };
 
+export const OutlineInverse: Story = {
+  args: {
+    ...Default.args,
+    action: "download",
+    label: "Download CV (PDF)",
+    variant: "outline-inverse",
+  },
+  render: (args) => (
+    <div className="bg-black p-8">
+      <Button {...args} />
+    </div>
+  ),
+};
+
 export const Large: Story = {
   args: {
     ...Default.args,

@@ -3,6 +3,7 @@ import article from "./documents/article";
 import author from "./documents/author";
 import button from "./documents/button";
 import category from "./documents/category";
+import { gallery } from "./documents/gallery";
 import page from "./documents/page";
 import pixel from "./documents/pixel";
 import socialLink from "./documents/socialLink";
@@ -10,6 +11,7 @@ import tagSections from "./documents/tagSections";
 import richText from "./fields/richText";
 
 import { accordionItem } from "./objects/accordionItem";
+import { galleryItem } from "./objects/galleryItem";
 import seo from "./objects/seo";
 import tagGroups from "./objects/tagGroups";
 
@@ -23,6 +25,8 @@ export const schemaTypes = [
   author,
   button,
   category,
+  gallery,
+  galleryItem,
   page,
   pixel,
   richText,

@@ -98,9 +98,11 @@ export default defineType({
     }),
     defineField({
       name: "download",
-      title: "Download Link",
-      type: "url",
-      description: "Link to a file to download.",
+      title: "Download",
+      type: "file",
+      options: {
+        accept: ".pdf",
+      },
       hidden: ({ parent }) => parent?.action !== "download",
     }),
   ],

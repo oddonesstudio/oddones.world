@@ -9,7 +9,7 @@ export type ButtonAction = "internal" | "external" | "contact" | "download" | "a
 
 type ButtonBaseProps = {
   className?: string;
-  variant?: "primary" | "primary-inverse" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "outline-inverse" | "ghost";
   size?: "sm" | "md" | "lg";
   label?: string | null;
   action?: ButtonAction | null;
@@ -24,18 +24,18 @@ export type ButtonProps =
 
 const styles = tv({
   slots: {
-    base: "group/button cursor-pointer inline-flex items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed gap-3 hover:scale-[1.02] transition-transform duration-100",
+    base: "tap-highlight-transparent group/button cursor-pointer inline-flex items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current focus-visible:ring-0 disabled:opacity-50 disabled:cursor-not-allowed gap-3 hover:scale-[1.02] transition-transform duration-100",
   },
   variants: {
     variant: {
       primary: {
         base: "bg-black text-white outline hover:outline-2",
       },
-      "primary-inverse": {
-        base: "bg-page-background text-black",
-      },
       secondary: {
         base: "outline hover:outline-2",
+      },
+      "outline-inverse": {
+        base: "rounded-lg border border-page-background/70 bg-black/20 px-8 text-white shadow-[0_0_30px_rgba(249,236,228,0.08)] backdrop-blur-sm hover:border-page-background hover:bg-page-background/10",
       },
       ghost: {
         base: "bg-transparent p-0!",
@@ -115,12 +115,15 @@ export const Button = (props: ButtonProps) => {
     };
     const isExternal = /^(https?:|mailto:|tel:)/.test(href);
     const isHashLink = href.startsWith("#");
+    const isDownload = action === "download";
 
-    if (isExternal || isHashLink) {
+    if (isExternal || isHashLink || isDownload) {
       return (
         <a
           href={href}
-          target={isExternal ? "_blank" : undefined}
+          target={isExternal || isDownload ? "_blank" : undefined}
+          rel={isExternal || isDownload ? "noopener noreferrer" : undefined}
+          download={isDownload ? true : undefined}
           className={base({ className })}
           {...linkProps}
         >

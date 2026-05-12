@@ -117,7 +117,7 @@ export default defineType({
         defineArrayMember({
           name: "section",
           type: "reference",
-          to: [{ type: "accordion" }],
+          to: [{ type: "accordion" }, { type: "gallery" }],
         }),
       ],
     }),

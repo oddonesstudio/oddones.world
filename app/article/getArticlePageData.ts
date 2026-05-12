@@ -2,12 +2,15 @@ import { notFound } from "next/navigation";
 import { stegaClean } from "next-sanity";
 
 import type { ArticleCTA, PortableTextValue } from "@/app/types/sanity";
+import { resolveButtonHref } from "@/app/utils/resolveButtonHref";
 
+import { sanityImageUrl } from "@/sanity/image";
 import { sanityFetch } from "@/sanity/live";
 
 import { articleQuery } from "@/studio/queries/groq";
 import type { ArticleQueryResult } from "@/studio/sanity.types";
 
+import type { ButtonAction } from "@/ui/atoms/Button";
 import type { SocialLink } from "@/ui/molecules/SocialLinks";
 
 type ArticleData = NonNullable<ArticleQueryResult>;
@@ -21,6 +24,12 @@ type ArticleTagSection = {
     heading: string;
     tags: string[];
   }[];
+};
+
+type ResolvedArticleCTA = {
+  label?: string | null;
+  href?: string;
+  action?: ButtonAction | null;
 };
 
 type ArticlePageProps = {
@@ -40,8 +49,20 @@ type ArticlePageProps = {
   contentSections: ArticleData["contentSections"];
   gateTitle?: ArticleData["gateTitle"];
   isPrivate: boolean;
-  primaryCTA: ArticleCTA | null;
-  secondaryCTA: ArticleCTA | null;
+  primaryCTA: ResolvedArticleCTA | null;
+  secondaryCTA: ResolvedArticleCTA | null;
+};
+
+const resolveArticleCTA = (cta?: ArticleCTA | null): ResolvedArticleCTA | null => {
+  if (!cta) {
+    return null;
+  }
+
+  return {
+    label: cta.label,
+    href: resolveButtonHref(cta),
+    action: cta.action,
+  };
 };
 
 export async function getArticlePageData(slug: string): Promise<ArticlePageProps> {
@@ -60,12 +81,16 @@ export async function getArticlePageData(slug: string): Promise<ArticlePageProps
     title: article.title,
     author: {
       name: article.author?.name ?? null,
-      avatar: article.author?.avatar?.asset?.url ?? undefined,
+      avatar:
+        sanityImageUrl(article.author?.avatar, { width: 80, height: 80, quality: 90 }) ??
+        article.author?.avatar?.asset?.url ??
+        undefined,
       bio: article.author?.bio ?? undefined,
       socialLinks:
         article.author?.socialLinks?.map((link) => ({
           _key: link._key,
           name: stegaClean(link.name),
+          url: link.url,
         })) ?? [],
     },
     body: article.body,
@@ -85,7 +110,7 @@ export async function getArticlePageData(slug: string): Promise<ArticlePageProps
         })),
       })) ?? [],
     contentSections: article.contentSections,
-    primaryCTA: article.primaryCTA,
-    secondaryCTA: article.secondaryCTA,
+    primaryCTA: resolveArticleCTA(article.primaryCTA),
+    secondaryCTA: resolveArticleCTA(article.secondaryCTA),
   };
 }

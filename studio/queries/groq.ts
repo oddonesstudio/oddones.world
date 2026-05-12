@@ -6,7 +6,11 @@ export const articleQuery = groq`
       author->{
         name,
         avatar {
+          _type,
+          crop,
+          hotspot,
           asset->{
+            _id,
             url
           }
         },
@@ -21,7 +25,11 @@ export const articleQuery = groq`
         anchor,
         externalURL,
         contact,
-        download,
+        download {
+          asset->{
+            url
+          }
+        },
         pageSlug,
         articleSlug
       },
@@ -32,7 +40,11 @@ export const articleQuery = groq`
         anchor,
         externalURL,
         contact,
-        download,
+        download {
+          asset->{
+            url
+          }
+        },
         pageSlug,
         articleSlug
       },
@@ -94,6 +106,20 @@ export const articleQuery = groq`
             content
           }
         },
+         _type == "gallery" => {
+          heading,
+          summaryText,
+          items[]{
+            _key,
+            title,
+            image {
+              asset->{
+                url
+              }
+            },
+            content
+          }
+        },
       }
     }
   `;
@@ -108,7 +134,11 @@ export const homePageQuery = groq`*[_type == "page" && slug.current == "/"][0]{
     anchor,
     externalURL,
     contact,
-    download,
+    download {
+      asset->{
+        url
+      }
+    },
     pageSlug,
     articleSlug
   },
@@ -119,7 +149,11 @@ export const homePageQuery = groq`*[_type == "page" && slug.current == "/"][0]{
     anchor,
     externalURL,
     contact,
-    download,
+    download {
+      asset->{
+        url
+      }
+    },
     pageSlug,
     articleSlug
   },
@@ -142,8 +176,12 @@ export const homePageQuery = groq`*[_type == "page" && slug.current == "/"][0]{
     isPrivate,
     author->{
       name,
-      avatar { asset->{ url } },
+      avatar { _type, crop, hotspot, asset->{ _id, url } },
       bio
+    },
+    categories[]->{
+      title,
+      "slug": slug.current
     },
     coverImage {
       asset->{
@@ -178,7 +216,7 @@ export const homePageQuery = groq`*[_type == "page" && slug.current == "/"][0]{
     isPrivate,
     author->{
       name,
-      avatar { asset->{ url } },
+      avatar { _type, crop, hotspot, asset->{ _id, url } },
       bio
     },
     coverImage {
@@ -257,7 +295,11 @@ export const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
         anchor,
         externalURL,
         contact,
-        download,
+        download {
+          asset->{
+            url
+          }
+        },
         "slug": select(
           linkType == "page" => pageSlug,
           linkType == "article" => "article/" + articleSlug,
