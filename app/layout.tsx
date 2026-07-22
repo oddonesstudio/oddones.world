@@ -5,7 +5,6 @@ import { VisualEditing } from "next-sanity/visual-editing";
 
 import { DOM_IDS } from "@/app/constants/ui";
 
-import { getMetadata } from "@/sanity/getMetadata";
 import { SanityLive, sanityFetch } from "@/sanity/live";
 
 import { siteSettingsQuery } from "@/studio/queries/groq";
@@ -45,10 +44,6 @@ const robotoMono = Roboto_Mono({
   subsets: ["latin"],
   weight: "400",
 });
-
-export async function generateMetadata() {
-  return getMetadata({ path: "/", slug: "/" });
-}
 
 export default async function RootLayout({
   children,

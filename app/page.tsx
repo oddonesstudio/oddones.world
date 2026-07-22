@@ -13,7 +13,7 @@ import { FeaturedArticlePortal } from "@/ui/components/FeaturedArticlePortal";
 import { Hero } from "@/ui/content-sections/Hero";
 
 export async function generateMetadata() {
-  return getMetadata({ path: "/", slug: "/" });
+  return getMetadata({ contentType: "page", path: "/", slug: "/" });
 }
 
 export default async function Home() {

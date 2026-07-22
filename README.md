@@ -6,6 +6,16 @@
 
 Run `bun run sanity:types` from the repository root after changing `studio/schemaTypes` or `studio/queries`. The root `dev` and `build` scripts run this automatically before starting Next.js.
 
+### Metadata
+
+Route-level pages own their own metadata so Sanity lookups can be scoped to the expected content type. The homepage calls `getMetadata` with `contentType: "page"`, while article routes call it with `contentType: "article"`.
+
+Metadata resolves in this order:
+
+1. Content-level SEO fields.
+2. Content title, excerpt, and cover image.
+3. Global SEO defaults.
+
 ### Sanity revalidation
 
 Production uses cached Sanity reads with explicit Next.js cache tags and a signed Sanity webhook for on-demand invalidation.

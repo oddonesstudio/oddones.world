@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { sanityFetch } from "./live";
 
 interface MetadataProps {
+  contentType?: "page" | "article";
   path?: string;
   slug?: string;
 }
@@ -12,6 +13,7 @@ type MetadataQueryResult = {
     _type?: string;
     isPrivate?: boolean;
     title?: string;
+    excerpt?: string;
     seo?: {
       title?: string;
       description?: string;
@@ -73,12 +75,18 @@ const resolveAbsoluteUrl = (urlOrPath: string, siteUrl?: string) => {
   }
 };
 
-export async function getMetadata({ path, slug }: MetadataProps = {}): Promise<Metadata> {
+export async function getMetadata({
+  contentType,
+  path,
+  slug,
+}: MetadataProps = {}): Promise<Metadata> {
+  const contentTypeFilter = contentType ? "_type == $contentType" : '_type in ["page", "article"]';
   const contentQuery = slug
-    ? `*[_type in ["page", "article"] && slug.current == $slug][0]{
+    ? `*[${contentTypeFilter} && slug.current == $slug][0]{
         _type,
         isPrivate,
         title,
+        excerpt,
         seo {
           title,
           description,
@@ -107,7 +115,7 @@ export async function getMetadata({ path, slug }: MetadataProps = {}): Promise<M
 
   const { data } = await sanityFetch({
     query,
-    params: { slug },
+    params: { contentType: contentType ?? null, slug },
     stega: false,
     tags: slug ? ["sanity:seo", `sanity:metadata:${slug}`] : ["sanity:seo"],
   });
@@ -115,15 +123,13 @@ export async function getMetadata({ path, slug }: MetadataProps = {}): Promise<M
 
   // Priorities:
   // 1. Content-level SEO
-  // 2. Content title/coverImage
+  // 2. Content title/excerpt/coverImage
   // 3. Global defaults
   const title = content?.seo?.title || content?.title || global?.defaultTitle;
-  const description = content?.seo?.description || global?.defaultDescription;
+  const description = content?.seo?.description || content?.excerpt || global?.defaultDescription;
   const ogImage =
     content?.seo?.ogImage || content?.coverImage || global?.ogImage || "/og-default.jpg";
-  const keywords = content?.seo?.keywords?.length
-    ? content.seo.keywords
-    : global?.defaultKeywords;
+  const keywords = content?.seo?.keywords?.length ? content.seo.keywords : global?.defaultKeywords;
   const siteUrl = getSiteUrl(global?.defaultCanonicalUrl);
   const routePath = normalizePath(path ?? (slug === "/" ? "/" : slug));
   const canonical =

@@ -20,7 +20,7 @@ type ArticleRouteProps = {
 export async function generateMetadata({ params }: ArticleRouteProps) {
   const { slug } = await params;
 
-  return getMetadata({ path: `/article/${slug}`, slug });
+  return getMetadata({ contentType: "article", path: `/article/${slug}`, slug });
 }
 
 export default async function ArticlePage({ params }: ArticleRouteProps) {
